@@ -1,0 +1,24 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color=#fffff>
+    <ion-buttons slot="start">
+      <ion-icon name="chevron-back-outline" class="profilebackbtn" button routerLink="/profile"></ion-icon>
+    </ion-buttons>
+    <ion-title class="custom-profileHeader">T&C</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="custom-heading">
+    <ion-text class="heading1">
+      <h1>{{ messageTemplate?.subject }}</h1>
+    </ion-text>
+  </div>
+  <div *ngIf="messageTemplate" class="custom-text">
+    <ion-text>
+      <p>{{ messageTemplate.message }}</p>
+    </ion-text>
+  </div>
+  <div *ngIf="!messageTemplate">
+    <p>Loading message template...</p>
+  </div>
+</ion-content>
