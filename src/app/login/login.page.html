@@ -9,28 +9,27 @@
   </ion-toolbar>
 
 </ion-header>
-<ion-content [fullscreen]="true" >
-<div>
-  <ion-img class="logoimg"
-  src="./assets/3d-mobile-phone-with-security-code-padlock.jpg"
-  alt=""
-></ion-img>
-</div>
-<div class="logindiv">
-  <ion-item class="custom-input">
-    <ion-input label="Phone Number" labelPlacement="floating" placeholder="" ></ion-input>
-  </ion-item>
-  <ion-item class="custom-input">
-    <ion-input label="Password" labelPlacement="floating" placeholder="" ></ion-input>
-  </ion-item>
+<ion-content [fullscreen]="true" scrollY="false">
+  <div>
+    <ion-img class="logoimg" src="./assets/3d-mobile-phone-with-security-code-padlock.jpg" alt=""></ion-img>
+  </div>
+  <div class="logindiv">
+    <ion-item class="custom-input">
+      <ion-label position="floating">Phone Number</ion-label>
+      <ion-input type="tel" [(ngModel)]="mobile"></ion-input>
+    </ion-item>
+    <ion-item class="custom-input">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password"></ion-input>
+    </ion-item>
   </div>
   <div class="buttons">
-    <div class="btn-div"><ion-button class="btn"  expand="block" style="margin-top: 20px;" routerLink="/profile">Login</ion-button></div>
-
-  <ion-text class="forgotpass">
-    <ion-label>
-      <a routerLink="/change-password">Forgot Password?</a>
-    </ion-label>
-  </ion-text>
-</div>
+    <div class="btn-div"><ion-button class="btn" expand="block" style="margin-top: 20px;"
+        (click)="onLogin()">Login</ion-button></div>
+    <ion-text class="forgotpass">
+      <ion-label>
+        <a routerLink="/change-password">Forgot Password?</a>
+      </ion-label>
+    </ion-text>
+  </div>
 </ion-content>

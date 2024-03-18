@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MessageTemplateService } from '../message-template.service';
+import { MessageTemplateService } from '../services/message-template.service';
 
 
 
