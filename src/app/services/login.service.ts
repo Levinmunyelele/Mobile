@@ -1,4 +1,3 @@
-// login.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,11 +9,22 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   login(mobile: string, password: string) {
-    return this.http.get<any>('http://qualipharmapi.local/v1/users', {
-      params: {
-        mobile: mobile,
-        password: password
-      }
+    return this.http.post<any>('http://qualipharmapi.local/v1/auth/login', {
+      mobile: mobile,
+      password: password
+    });
+  }
+
+  changePassword(mobile: string, oldPassword: string, newPassword: string, confirmPassword: string) {
+console.log("old pass:" + oldPassword);
+console.log("new pass:" + newPassword);
+console.log("confirm pass:" + confirmPassword);
+console.log("mobile:" + mobile);
+    return this.http.post<any>('http://qualipharmapi.local/v1/auth/change-password', {
+      mobile: mobile,
+      confirmPassword: confirmPassword,
+      newPassword: newPassword,
+      oldPassword: oldPassword,
     });
   }
 }

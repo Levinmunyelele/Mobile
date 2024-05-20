@@ -1,0 +1,37 @@
+/* Style for the container */
+.container {
+    margin: 20px;
+  }
+  
+  /* Style for the facility name and date */
+  .facility-date {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  /* Style for table header */
+  table th {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  /* Style for table data */
+  table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  /* Style for odd rows */
+  table tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+  

@@ -1,0 +1,38 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar  color="primary">
+    <ion-title>Qualipharm </ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar  color="primary">
+      <ion-title size="large">dashboard</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="home">
+        <ion-icon name="home-sharp"></ion-icon>
+        Home
+      </ion-tab-button>
+      <ion-tab-button tab="programmes">
+        <ion-icon name="create-sharp"></ion-icon> Programmes
+      </ion-tab-button>
+      <ion-tab-button tab="stock-reports">
+        <ion-icon name="bar-chart-sharp"></ion-icon> Stock Reports
+      </ion-tab-button>
+      <ion-tab-button tab="profile">
+        <ion-icon name="settings-sharp"></ion-icon> Settings
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

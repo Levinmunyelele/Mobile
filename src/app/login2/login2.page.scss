@@ -1,0 +1,94 @@
+// .logo-container {
+//     text-align: center;
+//     position: relative;
+//     top: 40px;
+//     max-width: 100%;
+//     max-height: 100%;
+
+// }
+
+.logo{
+    height: 100%;
+    position: relative;
+}
+
+
+.forgot-password {
+    text-align: center;
+}
+
+.form-container {
+    position: absolute;
+    width: 90%;
+    background-color:#ffffff;
+    border-radius: 20px 20px 20px 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    height: 10%;
+    overflow-y: auto;
+    height: fit-content;
+    top: 40%;
+    left: 5%;
+
+}
+
+.phone {
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-top: 5px;
+}
+
+.left-label {
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+.right-label {
+    margin-left: auto;
+    text-decoration: underline;
+    cursor: pointer;
+
+}
+
+.form-header h2 {
+    font-family: "Arial", sans-serif;
+    font-size:25px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+
+.form-header p {
+    font-family: "Arial", sans-serif;
+    font-size: 15px;
+    font-weight: normal;
+    text-align: center;
+    width: 100%;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.first-section {
+    height: 60%; 
+    background-color: #d9d9d9; 
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  
+  .second-section {
+    height: 50%; 
+    background-color:#9e1c25; 
+  }
+  
+  

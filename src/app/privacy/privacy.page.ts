@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import { MessageTemplateService } from '../services/message-template.service';
 
 
@@ -13,9 +13,14 @@ export class PrivacyPage implements OnInit {
   messageTemplateId: number | undefined;
   messageTemplate: { subject: string; message: string; } | undefined;
 
+  goBack(){
+    this.router.navigate(['/profile'])
+  }
+
   constructor(
     private route: ActivatedRoute,
-    private messageService: MessageTemplateService
+    private messageService: MessageTemplateService,
+    private router : Router
   ) { }
 
   ngOnInit() {

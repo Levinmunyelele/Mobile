@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Programs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-card *ngFor="let program of programs">
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="9">
+            <ion-card-title>{{ program.name }}</ion-card-title>
+            <p>Description: {{ program.description }}</p>
+          </ion-col>
+          <ion-col size="3">
+            <div class="status-container" [ngClass]="getStatusColor(program.status)">
+              <p>{{ program.status }}</p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

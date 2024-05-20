@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title style="text-align: center;">Programmes</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <!-- <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button> -->
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full">
+    <ion-item>
+      <ion-label>Programme</ion-label>
+      <ion-label slot="end">Status</ion-label>
+    </ion-item>
+    <ion-item *ngFor="let programme of programmes">
+      <ion-label>{{ programme.programmeName }}</ion-label>
+      <ion-label slot="end" [color]="getStatusColor(programme.active)">{{ programme.active }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

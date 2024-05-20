@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Inventory Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="inventoryDataForm">
+    <!-- Display facility name and date -->
+    <div style="display: flex; justify-content: space-between;">
+      <div>{{ inventoryDataForm.get('facilityName')?.value }}</div>
+      <div>{{ inventoryDataForm.get('date')?.value }}</div>
+    </div>
+    
+    <!-- Table to display program and inventory status -->
+    <table>
+      <thead>
+        <tr>
+          <th>Programme</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ inventoryDataForm.get('programmeName')?.value }}</td>
+          <td>{{ inventoryDataForm.get('inventoryStatusName')?.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

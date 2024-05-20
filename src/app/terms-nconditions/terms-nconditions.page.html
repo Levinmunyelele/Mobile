@@ -1,11 +1,25 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color=#fffff>
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>T&C</ion-title>
     <ion-buttons slot="start">
-      <ion-icon name="chevron-back-outline" class="profilebackbtn" button routerLink="/profile"></ion-icon>
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title class="custom-profileHeader">T&C</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="custom-heading">

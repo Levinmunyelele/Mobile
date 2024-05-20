@@ -1,20 +1,119 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>QualiPharm Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+</ion-header> -->
+<ion-content>
+  <h2 style="font-weight: bold; margin-left: 20px;">Programmes</h2>
+  <div class="card-container" style="box-shadow: 2pz 2px 2px 2px;">
+    <div class="card-wrapper">
+      <ion-card class="rounded-card">
+        <ion-img src="assets/3888762_11879.jpg" style="object-fit: cover;"></ion-img>
+      </ion-card>
+      <div class="program-name" style="margin-left: 30px;">Malaria</div>
+    </div>
+    <div class="card-wrapper">
+      <ion-card class="rounded-card">
+        <ion-img src="assets/27037210_phthisiatrician_17.jpg"
+          style="object-fit: cover; height: 100%; width: 100%; margin-bottom: 20px;"></ion-img>
+      </ion-card>
+      <div class="program-name" style="margin-left: 55px;">TB</div>
+    </div>
+    <div class="card-wrapper">
+      <ion-card class="rounded-card">
+        <ion-img src="assets/8747844.jpg" style="object-fit: cover; width: 80%; margin-left: 10px;"></ion-img>
+      </ion-card>
+      <div class="program-name" style="margin-left: 40px;">Oxygen</div>
+    </div>
+    <div class="card-wrapper">
+      <ion-card class="rounded-card">
+        <ion-img src="assets/12176839_4928409.jpg" style="object-fit: cover; width: 80%; margin-left: 10px;"></ion-img>
+      </ion-card>
+      <div class="program-name" style="margin-left: 25px;">Family Planning</div>
+    </div>
+    <div class="card-wrapper">
+      <ion-card class="rounded-card">
+        <ion-img src="assets/19334771_6104041.jpg" style="object-fit: cover; width: 80%; margin-left: 10px;"></ion-img>
+      </ion-card>
+      <div class="program-name" style="object-fit: cover; width: 80%; margin-left: 50px;">HIV </div>
+    </div>
+    <div class="card-wrapper">
+      <ion-card class="rounded-card">
+        <ion-img src="assets/health.jpg" style="object-fit: cover; width: 150%;"></ion-img>
+      </ion-card>
+      <div class="program-name" style="object-fit: cover; width: 80%; margin-left: 30px;">MOH 647 </div>
+    </div>
   </div>
+  <div>
+    <ion-card class="visuals" style="box-shadow: 4px 4px 4px 4px ;">
+      <highcharts-chart [Highcharts]='highcharts' [options]="chartOptions"
+        style='width: 100%; height:400px;display:block;'>
+      </highcharts-chart>
+    </ion-card>
+  </div>
+  <ion-grid>
+    <div class="row1">
+      <div class="col">
+        <ion-card class="custom-card" (click)="viewInventoryItem()">
+          <ion-card-header class="custom-header">
+            <ion-card-subtitle class="custom-subtitle">Inventory Management</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="bar-chart-sharp" class="custom-icon"></ion-icon>
+            <ion-card-title class="custom-title">Inventory</ion-card-title>
+            <ion-card-subtitle class="custom-subtitle">Explore our inventory facilities</ion-card-subtitle>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="col">
+        <ion-card class="custom-card">
+          <ion-card-header class="custom-header">
+            <ion-card-subtitle class="custom-subtitle">Messaging Services</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="mail-outline" class="custom-icon"></ion-icon>
+            <ion-card-title class="custom-title">Messages</ion-card-title>
+            <ion-card-subtitle class="custom-subtitle">Stay connected with our messaging features</ion-card-subtitle>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <ion-card class="custom-card">
+          <ion-card-header class="custom-header">
+            <ion-card-subtitle class="custom-subtitle" style="color: #1d434e;">Report Status</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="analytics-outline" class="custom-icon"></ion-icon>
+            <ion-card-title class="custom-title">Report Summary</ion-card-title>
+            <ion-card-subtitle class="custom-subtitle">View the status of your reports</ion-card-subtitle>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div class="col">
+        <ion-card class="custom-card">
+          <ion-card-header class="custom-header">
+            <ion-card-subtitle class="custom-subtitle">Need Help?</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="help-circle-outline" class="custom-icon"></ion-icon>
+            <ion-card-title class="custom-title">Get Assistance</ion-card-title>
+            <ion-card-subtitle class="custom-subtitle">Explore our support options</ion-card-subtitle>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </ion-grid>
 </ion-content>

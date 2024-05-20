@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Inventory Form</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content style="--background: #d9d9d9;">
+  <div class="header-container">
+    <h3>Oral Contraceptive Pill</h3>
+    <ion-button shape="round" size="small" (click)="navigateToInventoryForm()">Change</ion-button>
+  </div>
+  <ion-card class="custom-card">
+    <ion-card-content>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Begining balance:</td>
+          <!-- <td>{{ inventoryData.beginningBalance }}</td> -->
+          <td>Months of Stock:</td>
+          <!-- <td>{{ inventoryData.monthsOfStock }}</td> -->
+        </tr>
+        <tr>
+          <td>Received:</td>
+          <td>Dispatched KEMSA:</td>
+        </tr>
+        <tr>
+          <td>Dispensed:</td>
+          <td>AMC:</td>
+        </tr>
+        <tr>
+          <td>Losses:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Positive Adj:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Negative Adj:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Days Out Of Stock:</td>
+          <td>Adj. Consumption:</td>
+        </tr>
+        <tr>
+          <td>Ending balance:</td>
+          <td> Comp. Ending balance:</td>
+        </tr>
+        <tr>
+          <td>Quantity Requested:</td>
+          <td>Quantity to Order:</td>
+        </tr>
+      </tbody>
+    </table>
+    </ion-card-content>
+  </ion-card>
+  
+</ion-content>

@@ -48,9 +48,9 @@ ion-toolbar{
  .edit-icon {
     position:relative;
     color: #ffff;
-    background-color:var(--ion-color-primary) ; /* Optional: Add background color to the icon */
-    border-radius: 50%; /* Optional: Add border-radius for a circular shape */
-    padding: 4px; /* Optional: Add padding for spacing around the icon */
+    background-color:var(--ion-color-primary) ;
+    border-radius: 50%;
+    padding: 4px; 
     left: 70px;
     bottom: 15px;
   }
