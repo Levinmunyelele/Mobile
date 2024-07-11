@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiUrl = 'http://qualipharmapi.local/v1/inventory';
+  private apiUrl = 'https://qualipharm-app.healthstrat.co.ke/api/v1/inventory';
 
   constructor(private http: HttpClient) { }
 

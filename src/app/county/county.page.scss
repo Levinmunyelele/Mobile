@@ -1,0 +1,16 @@
+.scrollable-container {
+  display: flex;
+  white-space: nowrap;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  height: 300px; /* Set a reduced height */
+}
+
+.chart-container {
+  display: inline-flex;
+  padding: 5px; /* Adjust padding for spacing */
+}
+
+.chart-wrapper {
+  flex: 0 0 auto;
+  margin-right: 10px; /* Adjust margin for spacing between charts */
+}

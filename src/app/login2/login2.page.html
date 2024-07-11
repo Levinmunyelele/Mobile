@@ -8,9 +8,7 @@
   <div class="second-section">
 
   </div>
-    <div class="logo-container">
-      
-    </div>
+    <div class="logo-container"></div>
     <div class="form-container">
       <div class="form-header">
         <h2 style="color: #1d434e;">Login</h2>
@@ -32,12 +30,15 @@
           (click)="togglePasswordVisibility()"></ion-icon>
       </ion-item>
       <div class="custom-checkbox">
-        <ion-checkbox slot="start" style="--background: #d9d9d9;"></ion-checkbox>
+        <ion-checkbox slot="start" style="--background: #d9d9d9;" [(ngModel)]="rememberMe"></ion-checkbox>
         <ion-label class="left-label">Remember me</ion-label>
         <ion-label routerLink="/forgot-password" class="right-label">Forgot password?</ion-label>
       </div>
-      <ion-button style="margin-top: 50px; border-radius: 25px;" expand="block" color="primary"
-        (click)="login()">Login</ion-button>
+      <ion-button style="margin-top: 50px; border-radius: 25px;" expand="block" color="primary" (click)="login()">
+        Login
+      </ion-button>
+      
+    
     </div>
 
 </ion-content>

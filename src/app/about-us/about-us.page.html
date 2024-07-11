@@ -22,16 +22,16 @@
 
 <ion-content [fullscreen]="true">
   <div class="logo">
-    <ion-img class="logoimg" src="assets\images\imprint-418597_1920.jpg" alt=""></ion-img>
+    <ion-img class="logoimg" src="assets\Black Grey Simple Modern Name Logo (2).png" alt=""></ion-img>
   </div>
   <div class="custom-heading">
     <ion-text class="heading1">
-      <h1>{{ messageTemplate?.subject }}</h1>
+      <h1 style="font-family: 'Garamond', 'Times New Roman', serif; color: black; font-weight: 800;">{{ messageTemplate?.subject }}</h1>
     </ion-text>
   </div>
-  <div *ngIf="messageTemplate" class="custom-text">
+  <div *ngIf="messageTemplate" class="custom-text" style=" margin-top: 10px;">
     <ion-text>
-      <p>{{ messageTemplate.message }}</p>
+      <p style="font-family: 'Garamond', 'Times New Roman', serif; color: black; font-size: large;">{{ messageTemplate.message }}</p>
     </ion-text>
   </div>
   <div *ngIf="!messageTemplate">

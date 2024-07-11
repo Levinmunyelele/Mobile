@@ -18,6 +18,8 @@ export class Login2Page {
   errorMessage: string | undefined;
   hidePassword: boolean = true;
   changetype: boolean = true;
+  rememberMe: boolean = false;
+
   
 
 
@@ -34,6 +36,26 @@ export class Login2Page {
     return `${maxLength - inputLength} characters remaining`;
 
   }
+  ngOnInit() {
+    this.loadCredentials();
+  }
+
+  loadCredentials() {
+    if (localStorage.getItem('rememberMe') === 'true') {
+      this.mobile = localStorage.getItem('mobile') || '';
+      this.rememberMe = true;
+    }
+  }
+
+  saveCredentials() {
+    if (this.rememberMe) {
+      localStorage.setItem('rememberMe', 'true');
+      localStorage.setItem('mobile', this.mobile);
+    } else {
+      localStorage.setItem('rememberMe', 'false');
+      localStorage.removeItem('mobile');
+    }
+  }
 
   login() {
 
@@ -44,7 +66,7 @@ export class Login2Page {
       password: this.password
     };
     console.log(formData)
-    this.http.post<any>('http://qualipharmapi.local/v1/auth/login', formData).subscribe(
+    this.http.post<any>('https://qualipharm-app.healthstrat.co.ke/api/v1/auth/login', formData).subscribe(
       (response) => {
         console.log('Login successful:', response);
         if (response) {
@@ -63,6 +85,10 @@ export class Login2Page {
             case 'Sub County':
               this.router.navigate(['./sub-counties']);
               break;
+              break;
+              case 'County':
+                this.router.navigate(['counties']);
+                break;
             case 'Admin':
               this.router.navigate(['./dashboard']);
               break;
@@ -76,7 +102,7 @@ export class Login2Page {
         if (error.status === 400) {
           this.errorMessage = 'Incorrect phone number or password.';
         } else {
-          this.errorMessage = 'An error occurred while logging in. Please try again later.';
+          this.errorMessage = 'An error occurred while logging in. Please try again laters.';
         }
       }
     );

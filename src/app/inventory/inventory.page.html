@@ -1,6 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-title>Inventory Form</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content style="--background: #d9d9d9;">
@@ -54,5 +59,62 @@
     </table>
     </ion-card-content>
   </ion-card>
+
+  <div class="header-container">
+    <h3>Others</h3>
+    <ion-button shape="round" size="small" (click)="navigateToInventoryForm()">Change</ion-button>
+  </div>
+  <ion-card class="custom-card">
+    <ion-card-content>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Begining balance:</td>
+          <!-- <td>{{ inventoryData.beginningBalance }}</td> -->
+          <td>Months of Stock:</td>
+          <!-- <td>{{ inventoryData.monthsOfStock }}</td> -->
+        </tr>
+        <tr>
+          <td>Received:</td>
+          <td>Dispatched KEMSA:</td>
+        </tr>
+        <tr>
+          <td>Dispensed:</td>
+          <td>AMC:</td>
+        </tr>
+        <tr>
+          <td>Losses:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Positive Adj:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Negative Adj:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Days Out Of Stock:</td>
+          <td>Adj. Consumption:</td>
+        </tr>
+        <tr>
+          <td>Ending balance:</td>
+          <td> Comp. Ending balance:</td>
+        </tr>
+        <tr>
+          <td>Quantity Requested:</td>
+          <td>Quantity to Order:</td>
+        </tr>
+      </tbody>
+    </table>
+    </ion-card-content>
+  </ion-card>
+
+ <p><i> Quantity Requested is Different form Quantity Dispatched by KEMSA</i></p>
+ <p><i>Quantity Dispensed is less than AMC * 1.5 </i></p>
+
+ <ion-button expand="block" type="submit" style="margin-top: 25px;">Submit</ion-button>
+
   
 </ion-content>

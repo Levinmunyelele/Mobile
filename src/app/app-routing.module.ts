@@ -50,10 +50,11 @@ const routes: Routes = [
     path: 'national',
     loadChildren: () => import('./national/national.module').then( m => m.NationalPageModule)
   },
- 
-
- 
-  
+  {
+    path: 'county',
+    loadChildren: () => import('./county/county.module').then( m => m.CountyPageModule)
+  },
+   
 ];
 
 @NgModule({

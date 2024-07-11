@@ -35,7 +35,7 @@ export class HomePage {
 
   chartOptions: Options = {
     chart: {
-      type: 'pie', 
+      type: 'area', 
            
     },
     credits: {

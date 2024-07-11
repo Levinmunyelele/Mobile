@@ -1,0 +1,27 @@
+.status-div {
+    padding: 5px 10px; 
+    border-radius: 10px; 
+    display: inline-block; 
+    color: white; 
+  }
+  
+  .approved {
+    background-color: #4CAF50; 
+  }
+  
+  .pending {
+    background-color: #FFC107; 
+  }
+  
+  .not-reported {
+    background-color: #F44336; 
+  }
+  .heading-bold {
+    font-weight: bold;
+  }
+  .heading{
+    font-weight: bold;
+  }
+  .ion-text-end {
+    margin-bottom: 10px;
+  }

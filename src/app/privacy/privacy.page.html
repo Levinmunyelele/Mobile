@@ -22,15 +22,15 @@
 <ion-content [fullscreen]="true">
   <div class="custom-heading">
     <ion-text >
-      <h1 style="font-weight: bold; margin-left: 20px;">{{ messageTemplate?.subject }}</h1>
+      <h1 style="font-family: 'Garamond', 'Times New Roman', serif; color: black; font-weight: 800; margin-left: 20px;">{{ messageTemplate?.subject }}</h1>
     </ion-text>
   </div>
   <div *ngIf="messageTemplate" class="custom-text">
     <ion-text >
-      <p>{{ messageTemplate.message }}</p>
+      <p style="font-family: 'Garamond', 'Times New Roman', serif; color: black; font-size: large;">{{ messageTemplate.message }}</p>
     </ion-text>
   </div>
   <div *ngIf="!messageTemplate">
-    <p>Loading message template...</p>
+    <p style="font-family: 'Garamond', 'Times New Roman', serif; color: black; font-size: large;">Loading message template...</p>
   </div>
 </ion-content>

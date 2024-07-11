@@ -26,7 +26,7 @@ export class ProgrammesPage implements OnInit {
   }
 
   fetchProgrammes() {
-    this.http.get<any[]>('http://qualipharmapi.local/v1/programmes')
+    this.http.get<any[]>('https://qualipharm-app.healthstrat.co.ke/api//v1/programmes')
       .subscribe(data => {
         this.programmes = data;
       });

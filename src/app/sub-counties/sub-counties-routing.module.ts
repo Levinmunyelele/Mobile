@@ -14,7 +14,10 @@ const routes: Routes = [
     path: '',
     component: SubCountiesPage,
     children: [
-      { path: 'home', loadChildren: () => import('../home/home.module').then(m => m.HomePageModule) },
+      {
+        path: 'subhome',
+        loadChildren: () => import('../subhome/subhome.module').then( m => m.SubhomePageModule)
+      },
       { path: 'stock-reports', loadChildren: () => import('../stock-reports/stock-reports.module').then(m => m.StockReportsPageModule) },
       { path: 'helper', loadChildren: () => import('../helper/helper.module').then(m => m.HelperPageModule) },
       { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule) },
@@ -23,7 +26,7 @@ const routes: Routes = [
         loadChildren: () => import('../programmes/programmes.module').then( m => m.ProgrammesPageModule)
       },
     
-      { path: '', redirectTo: 'home', pathMatch: 'full' } 
+      { path: '', redirectTo: 'subhome', pathMatch: 'full' } 
     ]
   }
 ];

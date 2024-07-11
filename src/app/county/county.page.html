@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>National User</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="scrollable-container">
+    <div class="chart-container">
+      <div class="chart-wrapper">
+        <highcharts-chart [Highcharts]="Highcharts" [options]="malariaChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+        <div class="program-name" style="margin-left: 30px;">Malaria</div>
+      </div>
+      <div class="chart-wrapper">
+        <highcharts-chart [Highcharts]="Highcharts" [options]="tbChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+        <div class="program-name" style="margin-left: 55px;">TB</div>
+      </div>
+      <div class="chart-wrapper">
+        <highcharts-chart [Highcharts]="Highcharts" [options]="oxygenChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+        <div class="program-name" style="margin-left: 40px;">Oxygen</div>
+      </div>
+      <div class="chart-wrapper">
+        <highcharts-chart [Highcharts]="Highcharts" [options]="familyPlanningChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+        <div class="program-name" style="margin-left: 25px;">Family Planning</div>
+      </div>
+      <div class="chart-wrapper">
+        <highcharts-chart [Highcharts]="Highcharts" [options]="hivChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+        <div class="program-name" style="margin-left: 50px;">HIV</div>
+      </div>
+      <div class="chart-wrapper">
+        <highcharts-chart [Highcharts]="Highcharts" [options]="mohChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
+        <div class="program-name" style="margin-left: 30px;">MOH 647</div>
+      </div>
+    </div>
+  </div>  
+</ion-content>

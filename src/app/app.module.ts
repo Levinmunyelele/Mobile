@@ -11,9 +11,11 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { CountyPipe } from './county.pipe';
+import { SubhomePipe } from './subhome.pipe';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, CountyPipe, SubhomePipe],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule ,FormsModule,ReactiveFormsModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
