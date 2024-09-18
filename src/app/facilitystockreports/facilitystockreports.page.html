@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Stock Reports</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button (click)="goToNotifications()">
+        <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
+        <span class="badge" *ngIf="newNotificationsCount > 0">{{ newNotificationsCount }}</span>
+      </ion-button>
+      <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+ <ion-card>
+    <ion-card-header>
+      <ion-row>
+        <ion-col>
+          <ion-card-title>{{ facilityName }} </ion-card-title>
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <div class="date-selectors">
+            <ion-select [(ngModel)]="selectedMonth" interface="popover">
+              <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+            </ion-select>
+            <ion-select [(ngModel)]="selectedYear" interface="popover">
+              <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+            </ion-select>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-card-subtitle>Displaying {{ selectedMonth }} - {{ selectedYear }}</ion-card-subtitle>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
+  <ion-card>
+    <ion-card-header> 
+      <ion-row>
+        <ion-col>
+          <ion-card-title class="heading-bold">Programme</ion-card-title>
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <ion-card-title class="heading-bold" style="margin-right: 30px;">Status</ion-card-title>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let program of programmes">
+          <ion-label ion-text-wrap>{{ program.programmeName }}</ion-label>
+          <ion-label slot="end">
+            <div class="status-div" [ngClass]="getStatusColor(program.status)"
+              (click)="navigateToInventoryForm(program)">
+              {{ program.status }}
+            </div>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

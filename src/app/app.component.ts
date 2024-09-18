@@ -1,4 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
+
 // import './app.component.scss';
 
 
@@ -8,5 +11,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+
+  constructor(private menuController: MenuController,private router:Router) {}
+
 }

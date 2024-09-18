@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { MenuController } from '@ionic/angular';
+import { NotificationService, Notification } from './../services/notification.service'
+
 
 @Component({
   selector: 'app-stock-reports',
@@ -7,13 +11,37 @@ import { Router } from '@angular/router';
   styleUrls: ['./stock-reports.page.scss'],
 })
 export class StockReportsPage implements OnInit {
-  goBack() {
-    this.router.navigate(['/dashboard'])
+  currentDate: Date = new Date();
+
+  newNotificationsCount: number = 0;
+
+  goBack(): void {
+    this.location.back();
   }
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private location: Location, private menuController: MenuController ,private notificationService: NotificationService) { }
+
 
   ngOnInit() {
+    this.loadNotifications();
   }
 
+  toggleMenu() {
+    this.menuController.toggle('menu');
+
+  }
+
+  loadNotifications(): void {
+    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
+      this.newNotificationsCount = notifications.filter(notification => notification.isNew).length;
+    });
+  }
+
+  goToNotifications(): void {
+    this.router.navigate(['/notification']); 
+  }
+
+  printPage() {
+    window.print();
+  }
 }

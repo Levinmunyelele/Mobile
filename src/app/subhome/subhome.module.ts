@@ -8,6 +8,8 @@ import { SubhomePageRoutingModule } from './subhome-routing.module';
 
 import { SubhomePage } from './subhome.page';
 
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -17,4 +19,5 @@ import { SubhomePage } from './subhome.page';
   ],
   declarations: [SubhomePage]
 })
+
 export class SubhomePageModule {}

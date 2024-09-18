@@ -23,8 +23,12 @@ const routes: Routes = [
         path: 'programmes',
         loadChildren: () => import('../programmes/programmes.module').then( m => m.ProgrammesPageModule)
       },
+      {
+        path: 'nationalhome',
+        loadChildren: () => import('../nationalhome/nationalhome.module').then( m => m.NationalhomePageModule)
+      },
     
-      { path: '', redirectTo: 'home', pathMatch: 'full' } 
+      { path: '', redirectTo: 'nationalhome', pathMatch: 'full' } 
     ]
   }
 ];

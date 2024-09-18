@@ -5,33 +5,22 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon name="search"></ion-icon>
-      </ion-button>
-      <ion-button>
-        <ion-icon name="notifications-outline"></ion-icon>
-      </ion-button>
-      <ion-button>
-        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </ion-buttons>
     <ion-title class="custom-profileHeaders">Settings</ion-title>
   </ion-toolbar>
 
 </ion-header>
 <ion-content class="profilepage" color="light" [fullscreen]="true">
-  <!-- color="light" -->
   <div class="profilepic">
 
-    <ion-avatar class="avatar">
-      <img src="https://ionicframework.com/docs/img/demos/avatar.svg">
+    <ion-avatar class="avatar" (click)="takePhoto()">
+      <img [src]="userImage || 'https://ionicframework.com/docs/img/demos/avatar.svg'">
       <ion-icon name="pencil" class="edit-icon"></ion-icon>
     </ion-avatar>
+    
 
     <div style="display: flex;flex-direction:column; align-items: center;">
-      <h2 class="profilename">Jane Doe</h2>
-      <h3 class="profileemail">janedoe&#64;ionic.io</h3>
+      <h2 class="profilename">{{ userName }}</h2>
+      <h3 class="profileemail">{{ userEmail }}</h3>
     </div>
   </div>
 

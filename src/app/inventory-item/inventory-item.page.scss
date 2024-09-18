@@ -1,37 +1,127 @@
-/* Style for the container */
-.container {
-    margin: 20px;
-  }
-  
-  /* Style for the facility name and date */
-  .facility-date {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  /* Style for the table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  /* Style for table header */
-  table th {
-    background-color: #f2f2f2;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  /* Style for table data */
-  table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-  }
-  
-  /* Style for odd rows */
-  table tr:nth-child(odd) {
-    background-color: #f2f2f2;
-  }
-  
+.inventory-card {
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.programme-name-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.resupply-period {
+  font-size: 14px;
+  color: #666;
+}
+
+.print-button {
+  --background: #1d434e;
+  --border-radius: 4px;
+  font-size: 12px;
+}
+
+.drug-container {
+  margin-bottom: 20px;
+}
+
+.drug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.change-button {
+  --background: #1d434e;
+  --border-radius: 4px;
+  font-size: 12px;
+}
+
+.custom-card {
+  --box-shadow: none;
+  --border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  color: #333;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.date-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.expanded-card {
+  height: 33%; 
+}
+ion-select {
+  z-index: 1000; 
+}
+
+ion-card {
+  overflow: visible;
+}
+.drug-name {
+  font-weight: bold; 
+  font-size: medium; 
+}
+.bold-text {
+  font-weight: bold; 
+}
+.details-info {
+  font-style: italic; 
+  font-size: small;
+}
+
+.primary-color {
+  color: var(--ion-color-primary); 
+}
+.re{
+  font-size: medium;
+  font-weight: bold;
+}
+.expand{
+  height: 10%; 
+
+}
+.warning-text {
+  color: red;
+  font-weight: 500;
+  margin-top: 0px;
+}
+// .fixed-header {
+//   position: fixed;
+//   top: 0;
+//   width: 100%;
+//   z-index: 1;
+//   padding-bottom: 15px; 
+// }
+
+// ion-content {
+//   padding-top: 150px; 
+// }
+
+// .expand, .expanded-card {
+//   margin-bottom: 15px; 
+// }

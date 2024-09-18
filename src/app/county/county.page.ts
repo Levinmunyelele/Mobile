@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import { MenuController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { NotificationService, Notification } from './../services/notification.service'
 
 
 @Component({
@@ -7,331 +10,77 @@ import * as Highcharts from 'highcharts';
   templateUrl: './county.page.html',
   styleUrls: ['./county.page.scss'],
 })
-export class CountyPage implements OnInit {
+export class CountyPage implements OnInit {      
 
-  Highcharts: typeof Highcharts = Highcharts;
- 
-  malariaChartOptions: Highcharts.Options = {
-    chart: {
-      type: 'pie',
-      events: {
-        render: function () {
-          const chart = this as Highcharts.Chart & { customLabel?: Highcharts.SVGElement };
-          const total = chart.series[0].points.reduce((sum, point) => sum + (point.y || 0), 0);
-          const percentage = Math.round(((chart.series[0].points[0].y || 0) / total) * 100);
-          if (!chart.customLabel) {
-            chart.customLabel = chart.renderer.text(percentage + '%', chart.plotWidth / 2 + chart.plotLeft, chart.plotHeight / 2 + chart.plotTop)
-              .attr({
-                align: 'center',
-                'font-size': '24px',
-                'font-weight': 'bold'
-              })
-              .css({
-                color: 'black'
-              })
-              .add();
-          } else {
-            chart.customLabel.attr({
-              text: percentage + '%'
-            });
-          }
-        }
-      }
-    },
-    title: {
-      text: undefined // Remove the title
-    },
-    credits: {
-      enabled: false // Disable watermark
-    },
-    plotOptions: {
-      pie: {
-        size: '30%',
-        innerSize: '50%',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    },
-    series: [{
-      name: 'Share',
-      type: 'pie',
-      data: [
-        { name: 'Category 1', y: 30 },
-        { name: 'Category 2', y: 70 }
-      ]
-    }]
-  };
+  selectedRegion: string | undefined;
+  selectedMonth: string | undefined;
+  selectedYear: number | undefined;
+  newNotificationsCount: number = 0;
+  county: string = '';
   
-  tbChartOptions: Highcharts.Options = {
-    chart: {
-      type: 'pie',
-      events: {
-        render: function () {
-          const chart = this as Highcharts.Chart & { customLabel?: Highcharts.SVGElement };
-          const total = chart.series[0].points.reduce((sum, point) => sum + (point.y || 0), 0);
-          const percentage = Math.round(((chart.series[0].points[0].y || 0) / total) * 100);
-          if (!chart.customLabel) {
-            chart.customLabel = chart.renderer.text(percentage + '%', chart.plotWidth / 2 + chart.plotLeft, chart.plotHeight / 2 + chart.plotTop)
-              .attr({
-                align: 'center',
-                'font-size': '24px',
-                'font-weight': 'bold'
-              })
-              .css({
-                
-                color: 'black'
-              })
-              .add();
-          } else {
-            chart.customLabel.attr({
-              text: percentage + '%'
-            });
-          }
-        }
-      }
-    }, title: {
-      text: undefined // Remove the title
-    },
-    credits: {
-      enabled: false // Disable watermark
-    }, 
-    plotOptions: {
-      pie: {
-        size: '30%',
-        innerSize: '50%',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    },
-    series: [{
-      name: 'Share',
-      type: 'pie',
-      data: [
-        { name: 'Category 1', y: 45 },
-        { name: 'Category 2', y: 55 }
+
+  regions: string[] = ['Lamu'];
+  months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  years: number[] = [2024, 2023, 2022];
+
+  reportData: any[] = [
+    {
+      name: 'Lamu West',
+      items: [
+        { programme: 'Family Planning', rate: 7.41 },
+        { programme: 'Malaria', rate: 3.7 },
+        { programme: 'TB', rate: 3.7 },
+        { programme: 'HIV 2019 Form', rate: 3.7 },
+        { programme: 'Oxygen', rate: 7.41 },
+        { programme: 'MOH 647 Facility Tracer Health Products and Technology (HPT) Data Report Form', rate: 6.48 }
       ]
-    }]
-  };
-
-  oxygenChartOptions: Highcharts.Options = {
-    chart: {
-      type: 'pie',
-      events: {
-        render: function () {
-          const chart = this as Highcharts.Chart & { customLabel?: Highcharts.SVGElement };
-          const total = chart.series[0].points.reduce((sum, point) => sum + (point.y || 0), 0);
-          const percentage = Math.round(((chart.series[0].points[0].y || 0) / total) * 100);
-          if (!chart.customLabel) {
-            chart.customLabel = chart.renderer.text(percentage + '%', chart.plotWidth / 2 + chart.plotLeft, chart.plotHeight / 2 + chart.plotTop)
-              .attr({
-                align: 'center',
-                'font-size': '24px',
-                'font-weight': 'bold'
-              })
-              .css({
-                color: 'black'
-              })
-              .add();
-          } else {
-            chart.customLabel.attr({
-              text: percentage + '%'
-            });
-          }
-        }
-      }
     },
-    title: {
-      text: undefined // Remove the title
-    },
-    credits: {
-      enabled: false // Disable watermark
-    },
-   
-    plotOptions: {
-      pie: {
-        size: '30%',
-        innerSize: '50%',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    },
-    series: [{
-      name: 'Share',
-      type: 'pie',
-      data: [
-        { name: 'Category 1', y: 60 },
-        { name: 'Category 2', y: 40 }
+    {
+      name: 'Lamu East',
+      items: [
+        { programme: 'Family Planning', rate: 41.67 },
+        { programme: 'Malaria', rate: 41.67 },
+        { programme: 'TB', rate: 16.67 },
+        { programme: 'HIV 2019 Form', rate: 22.92 },
+        { programme: 'Oxygen', rate: 16.67 },
+        { programme: 'MOH 647 Facility Tracer Health Products and Technology (HPT) Data Report Form', rate: 33.33 }
       ]
-    }]
-  };
+    }
+  ];
+  constructor(private menuController:MenuController, private router:Router, private notificationService: NotificationService) { }
 
-  familyPlanningChartOptions: Highcharts.Options = {
-    chart: {
-      type: 'pie',
-      events: {
-        render: function () {
-          const chart = this as Highcharts.Chart & { customLabel?: Highcharts.SVGElement };
-          const total = chart.series[0].points.reduce((sum, point) => sum + (point.y || 0), 0);
-          const percentage = Math.round(((chart.series[0].points[0].y || 0) / total) * 100);
-          if (!chart.customLabel) {
-            chart.customLabel = chart.renderer.text(percentage + '%', chart.plotWidth / 2 + chart.plotLeft, chart.plotHeight / 2 + chart.plotTop)
-              .attr({
-                align: 'center',
-                'font-size': '24px',
-                'font-weight': 'bold'
-              })
-              .css({
-                color: 'black'
-              })
-              .add();
-          } else {
-            chart.customLabel.attr({
-              text: percentage + '%'
-            });
-          }
-        }
-      }
-    },
-    title: {
-      text: undefined // Remove the title
-    },
-    credits: {
-      enabled: false // Disable watermark
-    },
-   
-    plotOptions: {
-      pie: {
-        size: '30%',
-        innerSize: '50%',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    },
-    series: [{
-      name: 'Share',
-      type: 'pie',
-      data: [
-        { name: 'Category 1', y: 25 },
-        { name: 'Category 2', y: 75 }
-      ]
-    }]
-  };
-
-  hivChartOptions: Highcharts.Options = {
-    chart: {
-      type: 'pie',
-      events: {
-        render: function () {
-          const chart = this as Highcharts.Chart & { customLabel?: Highcharts.SVGElement };
-          const total = chart.series[0].points.reduce((sum, point) => sum + (point.y || 0), 0);
-          const percentage = Math.round(((chart.series[0].points[0].y || 0) / total) * 100);
-          if (!chart.customLabel) {
-            chart.customLabel = chart.renderer.text(percentage + '%', chart.plotWidth / 2 + chart.plotLeft, chart.plotHeight / 2 + chart.plotTop)
-              .attr({
-                align: 'center',
-                'font-size': '24px',
-                'font-weight': 'bold'
-              })
-              .css({
-                color: 'black'
-              })
-              .add();
-          } else {
-            chart.customLabel.attr({
-              text: percentage + '%'
-            });
-          }
-        }
-      }
-    },  
-    title: {
-      text: undefined // Remove the title
-    },
-    credits: {
-      enabled: false // Disable watermark
-    },
-   
-   
-    plotOptions: {
-      pie: {
-        size: '30%',
-        innerSize: '50%',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    },
-    series: [{
-      name: 'Share',
-      type: 'pie',
-      data: [
-        { name: 'Category 1', y: 50 },
-        { name: 'Category 2', y: 50 }
-      ]
-    }]
-  };
-
-  mohChartOptions: Highcharts.Options = {
-    chart: {
-      type: 'pie',
-      events: {
-        render: function () {
-          const chart = this as Highcharts.Chart & { customLabel?: Highcharts.SVGElement };
-          const total = chart.series[0].points.reduce((sum, point) => sum + (point.y || 0), 0);
-          const percentage = Math.round(((chart.series[0].points[0].y || 0) / total) * 100);
-          if (!chart.customLabel) {
-            chart.customLabel = chart.renderer.text(percentage + '%', chart.plotWidth / 2 + chart.plotLeft, chart.plotHeight / 2 + chart.plotTop)
-              .attr({
-                align: 'center',
-                'font-size': '24px',
-                'font-weight': 'bold'
-              })
-              .css({
-                color: 'black'
-              })
-              .add();
-          } else {
-            chart.customLabel.attr({
-              text: percentage + '%'
-            });
-          }
-        }
-      }
-    },title: {
-      text: undefined // Remove the title
-    },
-    credits: {
-      enabled: false // Disable watermark
-    },
-   
-   
-    plotOptions: {
-      pie: {
-        size: '30%',
-        innerSize: '50%',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    },
-    series: [{
-      name: 'Share',
-      type: 'pie',
-      data: [
-        { name: 'Category 1', y: 35 },
-        { name: 'Category 2', y: 65 }
-      ]
-    }]
-  };
-
-  constructor() { }
-
-
-  ngOnInit() {
+  loadUserDetails() {
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (user && user.county) {
+      this.county = user.county;  
+    } else {
+      console.warn('User or subcounty information not found.');
+    }
   }
 
+  loadNotifications(): void {
+    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
+      this.newNotificationsCount = notifications.filter(notification => notification.isNew).length;
+    });
+  }
+
+  goToNotifications(): void {
+    this.router.navigate(['/notification']); 
+  }
+  toggleMenu() {
+    this.menuController.toggle('menu'); 
+  }
+
+  ngOnInit() {
+    this.loadUserDetails();
+    this.selectedRegion = this.regions[0];
+    this.selectedMonth = this.months[5]; 
+    this.selectedYear = this.years[0]; 
+    this.loadNotifications();
+  }
+
+
 }
+  
+  
+

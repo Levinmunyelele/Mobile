@@ -1,12 +1,11 @@
+import { FacilitystockreportsPage } from '../facilitystockreports/facilitystockreports.page';
 import { FacilityhomePage } from './../facilityhome/facilityhome.page';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { FacilitiesPage } from './facilities.page';
 import { HomePage } from '../home/home.page';
-import { StockReportsPage } from '../stock-reports/stock-reports.page';
 import { HelperPage } from '../helper/helper.page';
-
 import { ProfilePage } from '../profile/profile.page';
 
 
@@ -19,7 +18,7 @@ const routes: Routes = [
       {
         path: 'facilityhome',
         loadChildren: () => import('../facilityhome/facilityhome.module').then( m => m.FacilityhomePageModule)
-      },      { path: 'stock-reports', loadChildren: () => import('../stock-reports/stock-reports.module').then(m => m.StockReportsPageModule) },
+      },      { path: 'facilitystockreports', loadChildren: () => import('../facilitystockreports/facilitystockreports.module').then(m => m.FacilitystockreportsPageModule) },
       { path: 'helper', loadChildren: () => import('../helper/helper.module').then(m => m.HelperPageModule) },
       { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule) },
       {

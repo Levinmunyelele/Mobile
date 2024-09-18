@@ -16,12 +16,16 @@ const routes: Routes = [
         path: 'programmes',
         loadChildren: () => import('../programmes/programmes.module').then( m => m.ProgrammesPageModule)
       },
+      {
+        path: 'county',
+        loadChildren: () => import('../county/county.module').then( m => m.CountyPageModule)
+      },
     
-      { path: '', redirectTo: 'home', pathMatch: 'full' } 
+      { path: '', redirectTo: 'county', pathMatch: 'full' } 
     ]
   
   }
-  
+    
 ];
 
 @NgModule({

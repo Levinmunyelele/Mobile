@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute,Router } from '@angular/router';
 import { MessageTemplateService } from '../services/message-template.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-terms-nconditions',
@@ -12,13 +13,14 @@ export class TermsNconditionsPage implements OnInit {
   messageTemplate: { subject: string; message: string; } | undefined;
 
   goBack(){
-    this.router.navigate(['/profile'])
+    this.location.back()
   }
 
   constructor(
     private route: ActivatedRoute,
     private messageService: MessageTemplateService,
-    private router: Router
+    private router: Router,
+    private location:Location
   ) { }
 
   ngOnInit() {

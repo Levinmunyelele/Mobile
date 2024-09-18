@@ -21,71 +21,83 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <div class="form-group">
-    <h3 style="font-weight: bold; width: 100%;  font-size: large;">Combined Oral Contraceptive Pill</h3>
-    <p style="font-style: italic; font-size: small;">Please enter your details below. <span style="color: #9e1c25;">*</span>Marked items are mandatory</p>
-    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()" class="custom-form">
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-bottom: 35px;  font-size: small;">Beginning Balance <span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item lines="none" style=" height: 24px;">
-          <ion-input formControlName="beginningBalance" type="number" style="--background: #fefefe; height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>      
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px;  font-size: small;">Received <span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item lines="none" >
-          <ion-input formControlName="received" type="number" style="--background: #ffffff; height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>  
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Dispensed<span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item  lines="none">
-          <ion-input formControlName="dispensed" type="number" style="--background: #ffffff;height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Losses<span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item  lines="none">
-          <ion-input formControlName="losses" type="number" style="--background: #ffffff; height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Positive Adjustment<span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item  lines="none">
-          <ion-input formControlName="positiveAdjustment" type="number" style="--background: #ffffff;height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>  
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Negative Adjustment<span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item  lines="none">
-          <ion-input formControlName="negativeAdjustment" type="number" style="--background: #ffffff; ;height: 14px; font-size: 10px; font-weight: bold; "></ion-input>
-        </ion-item>
-      </div>
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Ending Balance <span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item  lines="none">
-          <ion-input formControlName="endingBalance" type="number" style="--background: #ffffff; height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>
-      <div>   
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Quantity Requested <span style="color: #9e1c25;">*</span></ion-label> 
-        <ion-item  lines="none">
-          <ion-input formControlName="quantityRequested" type="number" style="--background: #ffffff; height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>
-      <div>
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;"l>Days Out of Stock <span style="color: #9e1c25;">*</span></ion-label>
-        <ion-item  lines="none">
-          <ion-input formControlName="daysOutOfStock" type="number" style="--background: #ffffff; height: 14px; font-size: 10px; font-weight: bold;"></ion-input>
-        </ion-item>
-      </div>
-      <div> 
-        <ion-label position="floating" style="margin-left: 15px; margin-top: 15px; font-size: small;">Comments</ion-label>
-        <ion-item  lines="none" style="height: 50px;">
-          <ion-textarea formControlName="comments"  style="--background: #ffffff;  height: 100%;height: 14px; font-size: 10px; font-weight: bold;"></ion-textarea>
-        </ion-item>
-      </div> 
-      
-      <ion-button expand="block" type="submit" [disabled]="!reactiveForm.valid" style="margin-top: 25px;">SAVE</ion-button>
-    </form>
+   <ion-card><ion-card-content><h3 style=" width: 100%;  font-size: 100%; font-weight: bold; color: black;">{{ drugName }}</h3></ion-card-content></ion-card> 
+    <p style="font-style: italic; font-size: 100%; margin-left: 15px;">Please enter your details below. <span
+        style="color: #9e1c25;">*</span>Marked items are mandatory</p>
+    <ion-card>
+      <ion-card-content>
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()" class="custom-form">
+          <div>
+            <ion-label position="floating" class="floating-label">Beginning Balance <span
+                class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="beginningBalance" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Received <span class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="received" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Dispensed<span class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="dispensed" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Losses <span class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="losses" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Positive Adjustment <span
+                class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="positiveAdjustment" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Negative Adjustment <span
+                class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="negativeAdjustment" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Ending Balance<span
+                class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="endingBalance" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Quantity Requested <span
+                class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="quantityRequested" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Days Out Of Stock<span
+                class="mandatory">*</span></ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-input formControlName="daysOutOfStock" type="number" class="bordered-input"></ion-input>
+            </ion-item>
+          </div>
+          <div>
+            <ion-label position="floating" class="floating-label">Comments</ion-label>
+            <ion-item lines="none" class="input-container">
+              <ion-textarea formControlName="comments" class="large-textarea" placeholder="Enter your comments here...">
+              </ion-textarea>
+            </ion-item>
+          </div>
+          <ion-button expand="block" type="submit" [disabled]="!reactiveForm.valid"
+            style="margin-top: 25px;">SAVE</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

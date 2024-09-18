@@ -5,56 +5,51 @@
       <ion-button>
         <ion-icon name="search"></ion-icon>
       </ion-button>
-      <ion-button>
-        <ion-icon name="notifications-outline"></ion-icon>
+      <ion-button (click)="goToNotifications()">
+        <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
+        <span class="badge" *ngIf="newNotificationsCount > 0">{{ newNotificationsCount }}</span>
       </ion-button>
-      <ion-button>
+      <ion-button (click)="toggleMenu()">
         <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <!-- Facility Name -->
-<ion-card>
-  <ion-card-header>
-    <ion-col>
-      <ion-card-title>{{ facilityName }}</ion-card-title>
-    </ion-col>
-  <ion-col class="ion-text-end date-col">
-      <ion-card-title >{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
-    </ion-col>
-  </ion-card-header>
-</ion-card>
-<ion-card>
-  <ion-card-header>
-    <ion-row>
-      <!-- Left section for "Programmes" heading -->
+  <ion-card>
+    <ion-card-header>
       <ion-col>
-        <ion-card-title class="heading-bold">Programme</ion-card-title>
+        <ion-card-title>{{ facilityName }}</ion-card-title>
       </ion-col>
-      <!-- Right section for "Status" heading -->
-      <ion-col class="ion-text-end">
-        <ion-card-title class="heading-bold" style="margin-right: 30px;">Status</ion-card-title>
+      <ion-col class="ion-text-end date-col">
+        <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
       </ion-col>
-    </ion-row>
-  </ion-card-header>
-  <ion-card-content>
-    <ion-list>
-      <!-- Use ion-item for each programme and status -->
-      <ion-item *ngFor="let item of inventoryData">
-        <!-- Programme Name on the left -->
-        <ion-label ion-text-wrap>{{ item.programmeName }}</ion-label>
-        <!-- Status on the right -->
-        <ion-label slot="end">
-          <!-- Status Div with rounded corners and colored background -->
-          <div class="status-div" [ngClass]="getStatusColor(item.inventoryStatusName)">
-            {{ item.inventoryStatusName }}
-          </div>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+    </ion-card-header>
+  </ion-card>
+  <ion-card>
+    <ion-card-header> 
+      <ion-row>
+        <ion-col>
+          <ion-card-title class="heading-bold">Programme</ion-card-title>
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <ion-card-title class="heading-bold" style="margin-right: 30px;">Status</ion-card-title>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let program of programmes">
+          <ion-label ion-text-wrap>{{ program.programmeName }}</ion-label>
+          <ion-label slot="end">
+            <div class="status-div" [ngClass]="getStatusColor(program.status)"
+              (click)="navigateToInventoryForm(program)">
+              {{ program.status }}
+            </div>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>

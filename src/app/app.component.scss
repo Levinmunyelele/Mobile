@@ -2,3 +2,13 @@
     background-color: #3880ff;
     color: #3880ff;
 }
+// Example of overriding ion-menu styles
+ion-menu.menu-content {
+    width: 100% !important; /* Adjust width as needed */
+    height: 20% !important; /* Adjust height if necessary */
+    top: 70px !important; /* Adjust top position to leave space for header or other elements */
+    z-index: 100;
+    border-radius: 10px;
+
+  }
+  

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
-import { HttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -10,39 +10,43 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./change-password.page.scss'],
 })
 export class ChangePasswordPage implements OnInit {
-  mobile = localStorage.getItem("mobile")?? '';;
+  mobile = sessionStorage.getItem("mobile") ?? '';
   oldPassword!: string;
   newPassword!: string;
   confirmPassword!: string;
   error!: string;
-  showSuccessMessage: boolean = false; // Add showSuccessMessage property
-  showErrorMessage: boolean = false;   // Add showErrorMessage property
+  showSuccessMessage: boolean = false;
+  showErrorMessage: boolean = false;
 
-  constructor(private router: Router, private loginService: LoginService, private http: HttpClient) { }
+  constructor(private router: Router, private loginService: LoginService, private location: Location) { }
 
   ngOnInit() {
   }
 
   goBack() {
-    this.router.navigate(['/profile']);
+    this.location.back()
   }
 
   changePassword() {
-    // Call the changePassword method from your LoginService
-    this.loginService.changePassword(this.mobile, this.oldPassword, this.newPassword, this.confirmPassword)
+    const payload = {
+      mobile: this.mobile,
+      oldPassword: this.oldPassword,
+      newPassword: this.newPassword,
+      confirmPassword: this.confirmPassword
+    };
+
+    this.loginService.changePassword(payload)
       .subscribe(
         response => {
-          // Handle successful password change
           console.log(response);
-          this.showSuccessMessage = true; // Show success message
-          // Optionally, navigate to another page or display a success message
+          this.showSuccessMessage = true;
         },
         error => {
-          // Handle error
           console.error(error);
-          this.showErrorMessage = true; // Show error message
-          this.error = error.message; // Set error message to display in the template
+          this.showErrorMessage = true;
+          this.error = error.message;
         }
       );
+      this.router.navigate(['/profile']);
   }
-}
+}  

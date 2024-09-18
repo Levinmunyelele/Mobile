@@ -6,6 +6,8 @@ import { MaskitoOptions, MaskitoElementPredicate } from '@maskito/core';
 
 
 
+
+
 @Component({
   selector: 'app-login2',
   templateUrl: './login2.page.html',
@@ -56,58 +58,53 @@ export class Login2Page {
       localStorage.removeItem('mobile');
     }
   }
+  login(){
+    const mobile = this.mobile.replace(/\D/g, '');
 
-  login() {
-
-    let numericMobile = this.mobile.replace(/\D/g, '');
-
-    const formData = {
-      mobile: numericMobile,
-      password: this.password
-    };
-    console.log(formData)
-    this.http.post<any>('https://qualipharm-app.healthstrat.co.ke/api/v1/auth/login', formData).subscribe(
-      (response) => {
-        console.log('Login successful:', response);
+    this.loginService.login({mobile,password:this.password}).subscribe({
+      next:(response:any)=>{
+        console.log(response)
+               console.log('Login successful:', response);
         if (response) {
           const { data, token } = response;
-          localStorage.setItem("mobile", numericMobile)
-          const { userGroupName } = data;
-          localStorage.setItem('token', token);
-
-          switch (userGroupName) {
+          const numericMobile = this.mobile.replace(/\D/g, '');
+          
+        
+          sessionStorage.setItem('mobile', numericMobile);
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('user', JSON.stringify(data));
+  
+          
+          switch (data.userType) {
             case 'National':
               this.router.navigate(['./national']);
               break;
-            case 'Facility':
+            case 'Facility User':
               this.router.navigate(['./facilities']);
               break;
-            case 'Sub County':
+            case 'Sub County Approvers':
               this.router.navigate(['./sub-counties']);
               break;
+            case 'County Approvers':
+              this.router.navigate(['./counties']);
               break;
-              case 'County':
-                this.router.navigate(['counties']);
-                break;
-            case 'Admin':
+            case 'Administrators':
               this.router.navigate(['./dashboard']);
               break;
             default:
               break;
           }
         }
+    
       },
-      (error) => {
-        console.error('Login error:', error);
-        if (error.status === 400) {
-          this.errorMessage = 'Incorrect phone number or password.';
-        } else {
-          this.errorMessage = 'An error occurred while logging in. Please try again laters.';
-        }
+      error:(error)=>{
+        console.log(error)
       }
-    );
+    })
+    
   }
 
+  
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
     this.changetype = !this.changetype

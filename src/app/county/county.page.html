@@ -1,36 +1,71 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>National User</ion-title>
+    <ion-title>County Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button (click)="goToNotifications()">
+        <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
+        <span class="badge" *ngIf="newNotificationsCount > 0">{{ newNotificationsCount }}</span>
+      </ion-button>
+      <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="scrollable-container">
-    <div class="chart-container">
-      <div class="chart-wrapper">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="malariaChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
-        <div class="program-name" style="margin-left: 30px;">Malaria</div>
-      </div>
-      <div class="chart-wrapper">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="tbChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
-        <div class="program-name" style="margin-left: 55px;">TB</div>
-      </div>
-      <div class="chart-wrapper">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="oxygenChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
-        <div class="program-name" style="margin-left: 40px;">Oxygen</div>
-      </div>
-      <div class="chart-wrapper">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="familyPlanningChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
-        <div class="program-name" style="margin-left: 25px;">Family Planning</div>
-      </div>
-      <div class="chart-wrapper">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="hivChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
-        <div class="program-name" style="margin-left: 50px;">HIV</div>
-      </div>
-      <div class="chart-wrapper">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="mohChartOptions" style="width: 100%; height: 400px; display: block;"></highcharts-chart>
-        <div class="program-name" style="margin-left: 30px;">MOH 647</div>
-      </div>
-    </div>
-  </div>  
+  <ion-grid>
+    <ion-row class="filters">
+      <ion-col size="4" class="region-label">
+        <div style="margin-top: 10px;">{{ county }} </div>
+      </ion-col>
+      <ion-col size="4">
+        <ion-select [(ngModel)]="selectedMonth" interface="popover">
+          <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="4" >
+        <ion-select [(ngModel)]="selectedYear" interface="popover">
+          <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="reporting-period">
+      <ion-col size="12">
+        <h4>Displaying {{ selectedMonth }} - {{ selectedYear }}</h4>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <hr class="divider">
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <ion-item class="header">
+            <ion-label style="font-weight: bold;">Programme</ion-label>
+            <ion-label style="font-weight: bold;" slot="end">Reporting Rate</ion-label>
+          </ion-item>
+          <ion-item-group *ngFor="let group of reportData">
+            <ion-item-divider color="light">
+              <ion-label>{{ group.name }}</ion-label>
+            </ion-item-divider>
+            <ion-item *ngFor="let item of group.items">
+              <ion-label>{{ item.programme }}</ion-label>
+              <div slot="end" class="progress-container">
+                <ion-progress-bar [value]="item.rate / 100" color="success"></ion-progress-bar>
+                <span class="rate">{{ item.rate }}%</span>
+              </div>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -8,6 +8,7 @@ import { FacilitiesPageRoutingModule } from './facilities-routing.module';
 
 import { FacilitiesPage } from './facilities.page';
 
+
 @NgModule({
   imports: [
     CommonModule,

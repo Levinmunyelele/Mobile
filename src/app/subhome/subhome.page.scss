@@ -1,27 +1,37 @@
-.status-div {
-    padding: 5px 10px; 
-    border-radius: 10px; 
-    display: inline-block; 
-    color: white; 
-  }
-  
-  .approved {
-    background-color: #4CAF50; 
-  }
-  
-  .pending {
-    background-color: #FFC107; 
-  }
-  
-  .not-reported {
-    background-color: #F44336; 
-  }
-  .heading-bold {
-    font-weight: bold;
-  }
-  .heading{
-    font-weight: bold;
-  }
-  .ion-text-end {
-    margin-bottom: 10px;
-  }
+.heading-bold {
+  font-weight: bold;
+}
+
+.reporting-rate {
+  display: flex;
+  align-items: center;
+}
+
+.reporting-rate ion-icon {
+  margin-right: 8px;
+}
+
+.badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 6px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.date-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.date-selectors {
+  display: flex;
+  align-items: center;
+}
+
+.date-selectors ion-select {
+  margin-right: 10px;
+}

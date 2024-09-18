@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Natinal Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button (click)="goToNotifications()">
+        <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
+        <span class="badge" *ngIf="newNotificationsCount > 0">{{ newNotificationsCount }}</span>
+      </ion-button>
+      <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-toolbar>
+  <ion-row class="filters">
+    <ion-col size="4" class="region-label">
+      <div style="margin-top: 10px;">Lamu</div>
+    </ion-col>
+    <ion-col size="4">
+      <ion-select [(ngModel)]="selectedMonth" interface="popover">
+        <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+      </ion-select>
+    </ion-col>
+    <ion-col size="4">
+      <ion-select [(ngModel)]="selectedYear" interface="popover">
+        <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+      </ion-select>
+    </ion-col>
+  </ion-row>
+</ion-toolbar>
+
+<ion-content>
+  <ion-card *ngFor="let region of regions">
+    <ion-card-header>
+      <ion-card-title>{{ region.name }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let item of region.items" class="progress-container">
+        <div class="progress-label">{{ item.name }}</div>
+        <ion-progress-bar [value]="item.percentage / 100" [color]="item.color"></ion-progress-bar>
+        <div class="progress-percentage">{{ item.percentage }}%</div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

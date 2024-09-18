@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiService } from './api.service';  
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class MessageTemplateService {
     'terms-nconditions': 1, 
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private api: ApiService) { }  
 
   getMessageTemplateId(pageName: string): number | undefined {
     return this.pageMessageMapping[pageName];
@@ -27,6 +27,19 @@ export class MessageTemplateService {
   }
 
   private fetchMessageTemplate(id: number): Observable<any> {
-    return this.http.get<any>(`https://qualipharm-app.healthstrat.co.ke/api/v1/message-templates/view?id=${id}`);
+   
+    return this.api.get(`message-templates/view`, { id });
   }
+
+  sendMessageTemplateData(payload: MessageTemplatePayload): Observable<any> {
+   
+    return this.api.post('message-templates/update', payload);
+  }
+}
+
+
+export interface MessageTemplatePayload {
+  id: number;
+  templateName: string;
+  content: string;
 }

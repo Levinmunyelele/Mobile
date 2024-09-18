@@ -1,16 +1,89 @@
-.scrollable-container {
-  display: flex;
-  white-space: nowrap;
-  overflow-x: hidden; /* Hide horizontal scrollbar */
-  height: 300px; /* Set a reduced height */
-}
+.page-reporting-rate {
+  ion-toolbar {
+    --background: #1d434e;
+    --color: #fff;
+  }
 
-.chart-container {
-  display: inline-flex;
-  padding: 5px; /* Adjust padding for spacing */
-}
+  // .filters {
+  //   margin-top: 10px;
+  //   display: flex;
+  //   align-items: center;
 
-.chart-wrapper {
-  flex: 0 0 auto;
-  margin-right: 10px; /* Adjust margin for spacing between charts */
+    // .region-label {
+    //   display: flex;
+    //   align-items: center;
+    //   margin-top: 10px;
+
+    //   // .label-text {
+    //   //   font-size: 1.2em;
+    //   //   color: #1d434e;
+    //   //   margin-top: 15px;
+    //   // }
+    // }
+
+    // .search-col {
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+    // }
+  // }
+
+  .reporting-period {
+    margin-top: 10px;
+
+    h3 {
+      text-align: center;
+      color: #1d434e;
+    }
+  }
+
+  ion-content {
+    --padding-start: 15px;
+    --padding-end: 15px;
+
+    ion-item.header {
+      background-color: #f1f1f1;
+      font-weight: bolder;
+
+      ion-label {
+        color: #1d434e;
+      }
+    }
+
+    ion-item {
+      --border-color: #1d434e;
+      border-radius: 10px;
+      margin-bottom: 10px;
+
+      ion-label {
+        color: #1d434e;
+      }
+    }
+
+    ion-item-divider {
+      background-color: #f1f1f1;
+      font-size: 1.2em;
+     
+      ion-label {
+        color: #1d434e;
+      }
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+
+      ion-progress-bar {
+        width: 100px;
+        height: 20px;
+        margin-right: 10px;
+        border-radius: 10px;
+      }
+
+      .rate {
+        font-weight: bold;
+        color: #1d434e;
+      }
+    }
+  }
 }
