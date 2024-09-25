@@ -73,7 +73,15 @@ const routes: Routes = [
     path: 'fstockreports',
     loadChildren: () => import('./fstockreports/fstockreports.module').then( m => m.FstockreportsPageModule)
   },
+  {
+    path: 'substocksummary',
+    loadChildren: () => import('./substocksummary/substocksummary.module').then( m => m.SubstocksummaryPageModule)
+  },
 
+  {
+    path: 'stock-reports',
+    loadChildren: () => import('./stock-reports/stock-reports.module').then( m => m.StockReportsPageModule)
+  },
      
 ];
    

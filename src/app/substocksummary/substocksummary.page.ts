@@ -6,16 +6,19 @@ import { ChangeDetectorRef } from '@angular/core';
 import { InventoryService } from '../services/inventory.service';
 import { Subscription } from 'rxjs';
 
+
+
+
 interface DrugDetails {
   [key: string]: string; 
 }
 
 @Component({
-  selector: 'app-inventory-item',
-  templateUrl: './inventory-item.page.html',
-  styleUrls: ['./inventory-item.page.scss'],
+  selector: 'app-substocksummary',
+  templateUrl: './substocksummary.page.html',
+  styleUrls: ['./substocksummary.page.scss'],
 })
-export class InventoryItemPage implements OnInit, OnDestroy {
+export class SubstocksummaryPage implements OnInit {
   inventoryDataById: { [key: string]: any } = {};
   programmeId!: number;
   drugs: any[] = [];
@@ -47,6 +50,8 @@ export class InventoryItemPage implements OnInit, OnDestroy {
   facilityId: number | null = null;
   currentDrug: any;
   showWarning: boolean | false = false;
+  subCountyName: any;
+  subCountyId: any;
 
   constructor(
     private http: HttpClient,
@@ -100,57 +105,19 @@ export class InventoryItemPage implements OnInit, OnDestroy {
     });
   }
 
-  matchFacilityId(facilities: any[]) {
+  matchFacilityId(subCounty: any[]) {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    this.facilityName = user.facility || '';
+    this.subCountyName = user.subCounty || '';
 
-    const matchedFacility = facilities.find((facility: any) => facility.facilityName === this.facilityName);
+    const matchedFacility = subCounty.find((subCounty: any) => subCounty.subCountyName === this.subCountyName);
 
     if (matchedFacility) {
-      this.facilityId = matchedFacility.facilityId;
-      console.log('Facility ID matched:', this.facilityId);
+      this.subCountyId = matchedFacility.subCountyId;
+      console.log('Facility ID matched:', this.subCountyId);
     } else {
-      console.warn('No matching facility found for:', this.facilityName);
+      console.warn('No matching facility found for:', this.subCountyName);
     }
   }
-  createInventory(drugId: number) {
-    if (!this.selectedMonth || !this.selectedYear) {
-      this.showWarning = true;
-      return;
-    } else {
-      this.showWarning = false;
-    }
-
-    if (this.facilityId === null) {
-      console.error('Facility ID is not set. Please check loadFacilities() method.');
-      return;
-    }
-
-    const inventoryData = {
-      facilityId: this.facilityId,
-      programmeId: this.programmeId,
-      year: this.selectedYear,
-      month: this.selectedMonth,
-      inventoryStatusId: 1,
-      categoryId: 5,
-      drugId: drugId
-    };
-
-    this.inventoryService.createInventory(inventoryData).subscribe(
-      (response: any) => {
-        if (response && response.inventoryId) {
-          const inventoryId = response.inventoryId;
-          this.goToInventoryForm(inventoryId, drugId, this.programmeId);
-        } else {
-          console.error('Unexpected response structure:', response);
-        }
-      },
-      (error) => {
-        console.error('Error creating inventory:', error);
-      }
-    );
-  }
-
   loadProgrammeDrugs() {
     console.log(`Fetching drugs for programmeId: ${this.programmeId}`);
   
@@ -244,7 +211,7 @@ export class InventoryItemPage implements OnInit, OnDestroy {
 
 
   goBack() {
-    this.router.navigate(['/facilities']);
+    this.router.navigate(['/stock-reports']);
   }
 
   ngOnDestroy() {
@@ -254,3 +221,4 @@ export class InventoryItemPage implements OnInit, OnDestroy {
   }
 
 }  
+ 

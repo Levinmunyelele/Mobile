@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>Stock Reports</ion-title>
+    <ion-title>Stock Summary</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -10,124 +10,35 @@
       <ion-button>
         <ion-icon name="search"></ion-icon>
       </ion-button>
-      <ion-button (click)="goToNotifications()">
-        <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
-        <span class="badge" *ngIf="newNotificationsCount > 0">{{ newNotificationsCount }}</span>
-      </ion-button>
-      <ion-button (click)="toggleMenu()">
-        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-      </ion-button>
     </ion-buttons>
   </ion-toolbar>
+</ion-header>
   <ion-content [fullscreen]="true">
     <ion-card>
-
-      <ion-row class="ion-align-items-center">
-        <ion-button class="long-button" (click)="printPage()">Print</ion-button>
-        <div class="date-container">
-          <strong>{{ currentDate | date: 'MMMM-yyyy' }}</strong>
-        </div>
-      </ion-row>
-    </ion-card>
-
-    <ion-card>
-      <ion-row>
-        <ion-grid>
-          <strong style="display: inline-block; width: 50%;">Family Planning</strong>
-          <strong style="display: inline-block; width: 50%;" class="text-right">DADAAB Sub-County</strong>
-        </ion-grid>
-      </ion-row>
-    </ion-card>
-    <ion-card>
-      <ion-grid>
+      <ion-card-header class="no-border">
         <ion-row>
-          <ion-col size="12">
-            <strong>Combined Oral contraceptive Pills</strong>
+          <ion-col class="col-wrap">
+            <ion-card-title>{{ subcounty }}</ion-card-title>
+          </ion-col>
+          <ion-col class="col-wrap ion-text-end date-col">
+            <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
           </ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="6">Beginning Balance: 101.00</ion-col>
-          <ion-col size="6">Months of Stock: 0.47</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Received: 0.00</ion-col>
-          <ion-col size="6">Dis. (KEMSA): 0.00</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Dispensed: 28.00</ion-col>
-          <ion-col size="6">AMC: 156.00</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Losses: 0.00</ion-col>
-          <ion-col size="6"> 0.00</ion-col>
-
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Positive Adj.: 0.00</ion-col>
-          <ion-col size="6"> 0.00</ion-col>
-
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Ending Balance: 73.00</ion-col>
-          <ion-col size="6"> 0.00</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Negative Adj.: 0.00</ion-col>
-          <ion-col size="6">Comp. Ending Bal.: 73.00</ion-col>
-
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Quantity Requested: 1,335.00</ion-col>
-          <ion-col size="6">Quantity to Order: 575.00</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card>
+      </ion-card-header>
+    </ion-card>  
+      
     <ion-card>
-      <ion-grid>
+      <ion-card-header>
         <ion-row>
-          <ion-col size="12">
-            <strong>Progestin only pills</strong>
-          </ion-col>
+          <ion-card-title class="heading-bold">Programme</ion-card-title>
         </ion-row>
-        <ion-row>
-          <ion-col size="6">Beginning Balance: 101.00</ion-col>
-          <ion-col size="6">Months of Stock: 0.47</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Received: 0.00</ion-col>
-          <ion-col size="6">Dis. (KEMSA): 0.00</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Dispensed: 28.00</ion-col>
-          <ion-col size="6">AMC: 156.00</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Losses: 0.00</ion-col>
-          <ion-col size="6"> 0.00</ion-col>
-
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Positive Adj.: 0.00</ion-col>
-          <ion-col size="6"> 0.00</ion-col>
-
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Ending Balance: 73.00</ion-col>
-          <ion-col size="6"> 0.00</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Negative Adj.: 0.00</ion-col>
-          <ion-col size="6">Comp. Ending Bal.: 73.00</ion-col>
-
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">Quantity Requested: 1,335.00</ion-col>
-          <ion-col size="6">Quantity to Order: 575.00</ion-col>
-        </ion-row>
-      </ion-grid>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let program of programmes">
+            <ion-label ion-text-wrap (click)="navigateToInventoryForm(program)">{{ program.programmeName }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
     </ion-card>
-    <ion-row class="ion-align-items-center ion-justify-content-between buttons-row">
-      <ion-button  class="custom-color-button" expand="full">Approve</ion-button>
-      <ion-button expand="full">Reject</ion-button>
-    </ion-row>
- </ion-content>
+  </ion-content>

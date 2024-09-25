@@ -27,5 +27,21 @@ ion-col {
 .custom-color-button {
   --ion-color-primary: #1d434e;
 }
+.heading-bold{
+  font-weight: bold;
+}
+.col-wrap {
+  white-space: normal; /* Allows text to wrap */
+  overflow: hidden; /* Hides any overflowing text */
+  text-overflow: ellipsis; /* Adds "..." for overflowed text */
+  word-wrap: break-word; /* Breaks words that are too long */
+}
 
+ion-card-title {
+  font-size: 14px; /* Adjust this as per your need */
+}
+
+ion-col {
+  flex: 1; /* Make both columns equal width and flexible */
+}
 

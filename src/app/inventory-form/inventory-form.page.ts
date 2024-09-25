@@ -29,7 +29,7 @@ export class InventoryFormPage implements OnInit {
       losses: new FormControl(null, [Validators.required]),
       positiveAdjustment: new FormControl(null, [Validators.required]),
       negativeAdjustment: new FormControl(null, [Validators.required]),
-      endingBalance: new FormControl({ value: null, disabled: true }),
+      endingBalance: new FormControl({ value: null, disabled: false }),
       quantityRequested: new FormControl(null, [Validators.required]),
       daysOutOfStock: new FormControl(null, [Validators.required]),
       comments: new FormControl(''),
