@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { InventoryService } from '../services/inventory.service';
 import { NotificationService, Notification } from './../services/notification.service';
 import { MenuController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-programmes',
@@ -20,27 +21,40 @@ export class ProgrammesPage implements OnInit {
   subcountyName: string | undefined; 
   facilities: any[] = [];
   filteredFacilities: any[] | undefined;
-  
+  programmeName: any;
+  programmeId: any;
 
   constructor(
     private router: Router,
-    private location: Location,
     private menuController: MenuController,
     private inventoryService: InventoryService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.loadSubcounties(); // Fetch subcounties mapping first
+    this.loadSubcounties(); 
     this.loadNotifications();
+    this.route.queryParams.subscribe(params => {
+      this.programmeId = params['programmeId'];
+      this.programmeName = params['programmeName'];
+    });
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter triggered');
+    this.loadSubcounties();
+    this.loadNotifications();
+    this.loadFacilities();
+    this.loadInventoryStatuses();
   }
 
   loadUserDetails() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     if (user && user.subCounty) {
       const subCountyName = user.subCounty.trim();
-      this.subcountyId = this.inventoryService.getSubCountyIdByName(subCountyName); // Use mapping
-      this.subcountyName = subCountyName; // Store the subcounty name
+      this.subcountyId = this.inventoryService.getSubCountyIdByName(subCountyName); 
+      this.subcountyName = subCountyName; 
       if (this.subcountyId) {
         this.loadFacilities();
       } else {
@@ -59,10 +73,12 @@ export class ProgrammesPage implements OnInit {
             this.facilities = response.facilities.map((facility: any) => {
               return {
                 ...facility,
-                status: facility.status || 'Not Reported'
+                status: 'Not Reported' 
               };
             });
             console.log('Facilities loaded:', this.facilities);
+
+            this.loadInventoryStatuses();
           } else {
             console.error('Unexpected data format:', response);
           }
@@ -75,7 +91,26 @@ export class ProgrammesPage implements OnInit {
       console.warn('subcountyId is undefined');
     }
   }
-  
+
+  loadInventoryStatuses() {
+    this.facilities.forEach((facility) => {
+      const payload = { programmeId: this.programmeId, facilityId: facility.facilityId };
+      this.inventoryService.getInventory(payload).subscribe(
+        (inventoryData) => {
+          if (inventoryData && inventoryData.inventoryStatusName) {
+            facility.status = inventoryData.inventoryStatusName; 
+            console.log(`Updated status for facilityId: ${facility.facilityId} to ${facility.status}`);
+          } else {
+            console.warn(`No inventory data found for programmeId: ${this.programmeId} and facilityId: ${facility.facilityId}`);
+          }
+        },
+        (error) => {
+          console.error(`Error fetching inventory data for programmeId: ${this.programmeId} and facilityId: ${facility.facilityId}`, error);
+        }
+      );
+    });
+  }
+
   loadSubcounties(): void {
     this.inventoryService.getSubcounties().subscribe(() => {
       this.loadUserDetails(); 
@@ -91,7 +126,7 @@ export class ProgrammesPage implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/sub-counties']);
   }
 
   toggleSearchBar() {
@@ -127,6 +162,18 @@ export class ProgrammesPage implements OnInit {
     this.menuController.toggle('menu');
   }
 
+  navigateToInventoryApproval(programme: any, facility: any) {
+    console.log(`Navigating to inventory page with programmeId: ${programme.programmeId}, facilityId: ${facility.facilityId}, subcountyId: ${this.subcountyId}`);
+        this.router.navigate(['/inventory-approval'], { 
+      queryParams: { 
+        programmeId: programme.programmeId, 
+        facilityId: facility.facilityId, 
+        subcountyId: this.subcountyId 
+      } 
+    });
+  }
+  
+  
   goToNotifications(): void {
     this.router.navigate(['/notification']);
   }

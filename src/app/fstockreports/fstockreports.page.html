@@ -34,9 +34,8 @@
     </ion-card-header>
   </ion-card>
   <ion-card class="ex">
-    <ion-row>   
-      <ion-card-title style="margin-left: 10px; margin-top: 2px;">{{ programmeName }}</ion-card-title> 
-    
+    <ion-row class="row">   
+      <ion-card-title>{{ programmeName }}</ion-card-title>
   </ion-row>
 
   </ion-card>
@@ -51,44 +50,45 @@
           <table class="table">
             <tbody>
               <tr>
-                <td class="bold-text">Beginning balance: {{ inventoryData[drug.drugId]?.beginningBalance || '0.00' }}</td>
-                <td>Months of Stock: {{ inventoryData[drug.drugId]?.monthsOfStock || '0' }}</td>
+                <td class="bold-text">Beginning balance: {{ drug.inventory.beginningBalance || '0' | number:'1.2-2' }}
+                </td>
+                <td>Months of Stock: {{drug.inventory.monthsOfStock || '0' | number:'1.2-2' }}</td>
               </tr>
               <tr>
-                <td>Received: {{ inventoryData[drug.drugId]?.received || '0' }}</td>
-                <td>Dispatched KEMSA: {{ inventoryData[drug.drugId]?.dispatchedKEMSA || '0' }}</td>
+                <td>Received: {{ drug.inventory.received || '0' | number:'1.2-2' }}</td>
+                <td>Dispatched KEMSA: {{ drug.inventory.dispatchedKEMSA || '0' | number:'1.2-2' }}</td>
               </tr>
               <tr>
-                <td>Dispensed: {{ inventoryData[drug.drugId]?.dispensed || '0' }}</td>
-                <td>AMC: {{ inventoryData[drug.drugId]?.amc || '0' }}</td>
+                <td>Dispensed: {{ drug.inventory.dispensed || '0' | number:'1.2-2' }}</td>
+                <td>AMC: {{ drug.inventory.averageMonthlyConsumption || '0' | number:'1.2-2' }}</td>
               </tr>
               <tr>
-                <td>Losses: {{ inventoryData[drug.drugId]?.losses || '0' }}</td>
+                <td>Losses: {{ drug.inventory.losses || '0' | number:'1.2-2' }}</td>
                 <td></td>
               </tr>
               <tr>
-                <td>Positive Adj: {{ inventoryData[drug.drugId]?.positiveAdjustment || '0' }}</td>
+                <td>Positive Adj: {{ drug.inventory.positiveAdjustment || '0' | number:'1.2-2' }}</td>
                 <td></td>
               </tr>
               <tr>
-                <td>Negative Adj: {{ inventoryData[drug.drugId]?.negativeAdjustment || '0' }}</td>
+                <td>Negative Adj: {{ drug.inventory.negativeAdjustment || '0' | number:'1.2-2' }}</td>
                 <td></td>
               </tr>
               <tr>
-                <td>Days Out Of Stock: {{ inventoryData[drug.drugId]?.daysOutOfStock || '0' }}</td>
-                <td>Adj. Consumption: {{ inventoryData[drug.drugId]?.adjustedConsumption || '0' }}</td>
+                <td>Days Out Of Stock: {{ drug.inventory.daysOutOfStock || '0' | number:'1.2-2' }}</td>
+                <td>Adj. Consumption: {{ drug.inventory.adjustmentConsumption || '0' | number:'1.2-2' }}</td>
               </tr>
               <tr>
-                <td class="bold-text">Ending balance: {{ inventoryData[drug.drugId]?.endingBalance || '0.00' }}</td>
-                <td>Comp. Ending balance: {{ inventoryData[drug.drugId]?.computedEndingBalance || '0.00' }}</td>
+                <td class="bold-text">Ending balance: {{ drug.inventory.endingBalance || '0' | number:'1.2-2' }}</td>
+                <td>Comp. Ending balance: {{ drug.inventory.computedEndingBalance || '0' | number:'1.2-2' }}</td>
               </tr>
               <tr>
-                <td>Quantity Requested: {{ inventoryData[drug.drugId]?.quantityRequested || '0' }}</td>
-                <td>Quantity to Order: {{ inventoryData[drug.drugId]?.quantityToOrder || '0' }}</td>
+                <td>Quantity Requested: {{ drug.inventory.quantityRequested || '0' | number:'1.2-2' }}</td>
+                <td>Quantity to Order: {{ drug.inventory.quantityToOrder || '0' | number:'1.2-2' }}</td>
               </tr>
             </tbody>
           </table>
-        </ion-card-content>
+         </ion-card-content>
       </ion-card>
     </div>
     <p><i> Quantity Requested is Different from Quantity Dispatched by KEMSA</i></p>

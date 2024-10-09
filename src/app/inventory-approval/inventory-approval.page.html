@@ -1,6 +1,7 @@
+
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>Stock Summary</ion-title>
+    <ion-title>Inventory Approval</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
@@ -8,43 +9,44 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<ion-content fullscreen>
+<ion-content fullscreen class="print-report">
   <div class="fixed-header">
     <ion-card class="expand">
-      <ion-card-header>
-        <ion-row>
-        <ion-col>
-          <ion-button (click)="printPage()" shape="round" size="small" class="print-button">Print</ion-button>
-        </ion-col>
-        <ion-col class="ion-text-end date-col">
-          <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
-        </ion-col>
-      </ion-row>
-      </ion-card-header>
-    </ion-card>
-
-    <ion-card>
       <ion-card-header>
         <ion-row>
           <ion-col>
             <ion-card-title>{{ programmeName }}</ion-card-title>
           </ion-col>
           <ion-col class="ion-text-end date-col">
+            <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
+          </ion-col>
+        </ion-row>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-row>
+          <ion-col class="ion-text-end date-col">
+            <ion-button class="print-exclude" (click)="printPage()" shape="round" size="small" class="print-button">Print</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
             <ion-card-title>{{ subCountyName }}</ion-card-title>
           </ion-col>
         </ion-row>
       </ion-card-header>
     </ion-card>
   </div>
+
   <div class="scrollable-content">
     <ion-card *ngIf="displayDrugs">
       <div *ngFor="let drug of drugs" class="drug-container">
         <ion-card class="custom-card">
           <ion-card-content>
-            <div class="header-container">
-              <h3 class="drug-name">{{ drug.drugName }} </h3>
-            </div>
+            <h4 class="drug-name">{{ drug.drugName }}</h4> 
             <table class="table">
               <tbody>
                 <tr>
@@ -89,5 +91,15 @@
         </ion-card>
       </div>
     </ion-card>
+    
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="success" class="print-exclude" (click)="approveInventory()">Approve</ion-button>
+      </ion-col>      
+      <ion-col>
+        <ion-button expand="full" color="danger" class="print-exclude">Reject</ion-button>
+      </ion-col>
+    </ion-row>    
+    
   </div>
 </ion-content>

@@ -8,29 +8,49 @@ import { HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class InventoryService {
+
   private subCountyMapping: { [key: string]: number } = {};
   private inventoryDataSubject = new BehaviorSubject<any[]>([]);
   inventoryData$: Observable<any[]> = this.inventoryDataSubject.asObservable();
 
   constructor(private api: ApiService) { }
 
-  getInventory(payload: any): Observable<any> {
-    return this.api.get('inventory', payload);
+  getInventory(payload: { programmeId: number; facilityId: number }): Observable<any> {
+    const params = {
+      programmeId: payload.programmeId,
+      facilityId: payload.facilityId
+    };
+    return this.api.get('inventory', params).pipe(
+      map(response => {
+        if (response.status === "success") {
+          return response.data; 
+        } else {
+          throw new Error("Failed to fetch inventory data");
+        }
+      })
+    );
   }
+  approveInventory(facilityId: any, programmeId: any): Observable<any> {
+    console.log('Calling approveInventory API with facilityId:', facilityId, 'and programmeId:', programmeId);
+  
+    const url = `inventory/approve-inventory?facilityId=${facilityId}&programmeId=${programmeId}`;  
+  
+    return this.api.put(url, null);  
+  }  
+  
 
   getProgrammes() {
     return this.api.get('programmes');
   }
 
-  getFacilities(): Observable<any[]> {
-    return this.api.get('facilities').pipe(
-      tap((response: any) => {
-        console.log('Facilities data received:', response);
+  getFacilities(subCountyId: number): Observable<any[]> {
+    return this.api.get(`facilities?subCountyId=${subCountyId}`).pipe(
+      tap(() => {
       }),
       map((response: { facilities: any[] }) => response.facilities)
     );
   }
-
+  
   getCategories() {
     return this.api.get('categories');
   }
@@ -52,6 +72,10 @@ export class InventoryService {
   getFacilitiesBySubCounty(subCountyId: number): Observable<any> {
     console.log('Fetching facilities for subCountyId:', subCountyId);
     return this.api.get('facilities', { subCountyId });
+  }
+
+  getCounties() {
+    return this.api.get('counties');
   }
 
   getSubcounties(): Observable<any> {
@@ -94,6 +118,9 @@ export class InventoryService {
       })
     );
   }
+  updateInventory(inventoryId: number, inventoryData: any) {
+    return this.api.put(`inventory/update-inventory?inventoryId=${inventoryId}`, inventoryData);
+  } 
   
   getInventoryLines(drugId: number): Observable<any[]> {
     return this.api.get('inventory-lines', { params: { drugId } }).pipe(

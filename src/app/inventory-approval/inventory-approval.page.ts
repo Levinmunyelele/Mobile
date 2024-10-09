@@ -10,12 +10,11 @@ interface DrugDetails {
 }
 
 @Component({
-  selector: 'app-substocksummary',
-  templateUrl: './substocksummary.page.html',
-  styleUrls: ['./substocksummary.page.scss'],
+selector: 'app-inventory-approval',
+templateUrl: './inventory-approval.page.html',
+styleUrls: ['./inventory-approval.page.scss'],
 })
-export class SubstocksummaryPage implements OnInit {
-  inventoryDataById: { [key: string]: any } = {};
+export class InventoryApprovalPage implements OnInit, OnDestroy {
   programmeId!: number;
   drugs: any[] = [];
   allDrugs: DrugDetails = {}; 
@@ -23,8 +22,6 @@ export class SubstocksummaryPage implements OnInit {
   allDrugDetails: { [id: number]: any } = {};
   programmeName!: string;
   facilityName!: string;
-  selectedMonth: string = '';
-  selectedYear: number | null = null;
   months = [
     { name: 'January', value: '01' },
     { name: 'February', value: '02' },
@@ -43,17 +40,15 @@ export class SubstocksummaryPage implements OnInit {
   currentDate!: Date;
   private inventoryDataSubscription!: Subscription;
   inventoryData: { [drugId: number]: any } = {};
-  facilityId: number | null = null;
+  facilityId!: number;
   currentDrug: any;
   showWarning: boolean | false = false;
   subCountyName: any;
   subCountyId: any;
 
   constructor(
-    private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef,
     private inventoryService: InventoryService
   ) {
     const today = new Date();
@@ -73,13 +68,20 @@ export class SubstocksummaryPage implements OnInit {
       this.currentDate = new Date();
     });
 
+    this.route.queryParams.subscribe(params => {
+      this.facilityId = +params['facilityId'];
+      this.programmeId = +params['programmeId'];
+      this.subCountyId = +params['subCountyId']
+      console.log('FacilityId:', this.facilityId, 'ProgrammeId:', this.programmeId); 
+    });
+
     this.inventoryDataSubscription = this.inventoryService.inventoryData$.subscribe((data: any[]) => {
       this.inventoryData = data.reduce((map, item) => {
         map[item.drugId] = item;
         return map;
       }, {} as { [drugId: number]: any });
     });
-
+    
   }
 
   ionViewWillEnter() {
@@ -89,13 +91,23 @@ export class SubstocksummaryPage implements OnInit {
   }
 
   printPage(): void {
+    const buttons = document.querySelectorAll('.print-exclude');
+  
+    buttons.forEach(button => {
+      (button as HTMLElement).style.display = 'none';
+    });
+  
     window.print();
+  
+    buttons.forEach(button => {
+      (button as HTMLElement).style.display = 'block';
+    });
   }
+  
 
   loadFacilities() {
-    // Retrieve the subCountyId from the session or wherever it's stored
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    const userSubCountyId = user?.subCounty; // Assuming subCountyId is stored in the user object
+    const userSubCountyId = user?.subCounty; 
   
     console.log('User Subcounty ID:', userSubCountyId);
   
@@ -104,7 +116,6 @@ export class SubstocksummaryPage implements OnInit {
       return;
     }
   
-    // Call the inventoryService.getFacilities() with the subCountyId
     this.inventoryService.getFacilities(userSubCountyId).subscribe(
       (facilities: any[]) => {
         console.log('Fetched facilities:', facilities);
@@ -163,13 +174,10 @@ export class SubstocksummaryPage implements OnInit {
         console.error('Error fetching programme drugs:', error);
       }
     );
-  }
-  
-
-
+  }   
 
   goToInventoryForm(inventoryId: number, drugId: number, programmeId: number) {
-    this.router.navigate(['/inventory-form'], {
+    this.router.navigate(['/programmes'], {
       queryParams: {
         inventoryId,
         drugId,
@@ -220,11 +228,38 @@ export class SubstocksummaryPage implements OnInit {
     );
   }
 
+  approveInventory() {
+    console.log('Approving inventory with facilityId:', this.facilityId, 'and programmeId:', this.programmeId);
+    
+    if (this.facilityId && this.programmeId) {
+      this.inventoryService.approveInventory(this.facilityId, this.programmeId).subscribe(
+        response => {
+          console.log('Inventory approved:', response);
+
+          this.router.navigate(['/programmes'], {
+            queryParams: { programmeId: this.programmeId,
+              programmeName: this.programmeName  
+              
+
+             }
+          });
+        },
+        error => {
+          console.error('Error approving inventory:', error);
+        }
+      );
+    } else {
+      console.error('Missing facilityId or programmeId');
+    }
+}
 
 
   goBack() {
-    this.router.navigate(['/stock-reports']);
-  }
+    this.router.navigate(['/programmes'], {
+      queryParams: { programmeId: this.programmeId , programmeName: this.programmeName }
+    });
+}
+
 
   ngOnDestroy() {
     if (this.inventoryDataSubscription) {

@@ -20,7 +20,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [scrollY]="false">
+<ion-content>
   <div class="fixed-header">
     <ion-card class="expand">
       <ion-card-header>
@@ -75,67 +75,66 @@
       </ion-card-header>
     </ion-card>
   </div>
-</ion-content>
-<ion-content>
-  <ion-card *ngIf="displayDrugs">
-    <div *ngFor="let drug of drugs" class="drug-container">
-      <ion-card class="custom-card">
-        <ion-card-content>
-          <div class="header-container">
-            <h3 class="drug-name">{{ drug.drugName }} </h3>
-            <ion-button (click)="createInventory(drug.drugId)" shape="round" size="small" class="change-button">
-              Change
-            </ion-button>
-          </div>
-          <table class="table">
-            <tbody>
-              <tr>
-                <td class="bold-text">Beginning balance: {{ drug.inventory.beginningBalance || '0' | number:'1.2-2' }}
-                </td>
-                <td>Months of Stock: {{drug.inventory.monthsOfStock || '0' | number:'1.2-2' }}</td>
-              </tr>
-              <tr>
-                <td>Received: {{ drug.inventory.received || '0' | number:'1.2-2' }}</td>
-                <td>Dispatched KEMSA: {{ drug.inventory.dispatchedKEMSA || '0' | number:'1.2-2' }}</td>
-              </tr>
-              <tr>
-                <td>Dispensed: {{ drug.inventory.dispensed || '0' | number:'1.2-2' }}</td>
-                <td>AMC: {{ drug.inventory.averageMonthlyConsumption || '0' | number:'1.2-2' }}</td>
-              </tr>
-              <tr>
-                <td>Losses: {{ drug.inventory.losses || '0' | number:'1.2-2' }}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Positive Adj: {{ drug.inventory.positiveAdjustment || '0' | number:'1.2-2' }}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Negative Adj: {{ drug.inventory.negativeAdjustment || '0' | number:'1.2-2' }}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Days Out Of Stock: {{ drug.inventory.daysOutOfStock || '0' | number:'1.2-2' }}</td>
-                <td>Adj. Consumption: {{ drug.inventory.adjustmentConsumption || '0' | number:'1.2-2' }}</td>
-              </tr>
-              <tr>
-                <td class="bold-text">Ending balance: {{ drug.inventory.endingBalance || '0' | number:'1.2-2' }}</td>
-                <td>Comp. Ending balance: {{ drug.inventory.computedEndingBalance || '0' | number:'1.2-2' }}</td>
-              </tr>
-              <tr>
-                <td>Quantity Requested: {{ drug.inventory.quantityRequested || '0' | number:'1.2-2' }}</td>
-                <td>Quantity to Order: {{ drug.inventory.quantityToOrder || '0' | number:'1.2-2' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </ion-card-content>
-      </ion-card>
-    </div>
-    <p><i>Quantity Requested is Different from Quantity Dispatched by KEMSA</i></p>
-    <p><i>Quantity Dispensed is less than AMC * 1.5</i></p>
-
-    <ion-button expand="block" type="submit" style="margin-top: 25px;">Submit</ion-button>
-  </ion-card>
-
-
+  <div class="content">
+    <ion-card *ngIf="displayDrugs">
+      <div *ngFor="let drug of drugs" class="drug-container">
+        <ion-card class="custom-card">
+          <ion-card-content>
+            <div class="header-container">
+              <h3 class="drug-name">{{ drug.drugName }} </h3>
+              <ion-button (click)="createInventory(drug.drugId)" shape="round" size="small" class="change-button">
+                Change
+              </ion-button>
+            </div>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td class="bold-text">Beginning balance: {{ drug.inventory.beginningBalance || '0' | number:'1.2-2' }}
+                  </td>
+                  <td>Months of Stock: {{drug.inventory.monthsOfStock || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Received: {{ drug.inventory.received || '0' | number:'1.2-2' }}</td>
+                  <td>Dispatched KEMSA: {{ drug.inventory.dispatchedKEMSA || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Dispensed: {{ drug.inventory.dispensed || '0' | number:'1.2-2' }}</td>
+                  <td>AMC: {{ drug.inventory.averageMonthlyConsumption || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Losses: {{ drug.inventory.losses || '0' | number:'1.2-2' }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Positive Adj: {{ drug.inventory.positiveAdjustment || '0' | number:'1.2-2' }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Negative Adj: {{ drug.inventory.negativeAdjustment || '0' | number:'1.2-2' }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Days Out Of Stock: {{ drug.inventory.daysOutOfStock || '0' | number:'1.2-2' }}</td>
+                  <td>Adj. Consumption: {{ drug.inventory.adjustmentConsumption || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td class="bold-text">Ending balance: {{ drug.inventory.endingBalance || '0' | number:'1.2-2' }}</td>
+                  <td>Comp. Ending balance: {{ drug.inventory.computedEndingBalance || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Quantity Requested: {{ drug.inventory.quantityRequested || '0' | number:'1.2-2' }}</td>
+                  <td>Quantity to Order: {{ drug.inventory.quantityToOrder || '0' | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <p><i>Quantity Requested is Different from Quantity Dispatched by KEMSA</i></p>
+      <p><i>Quantity Dispensed is less than AMC * 1.5</i></p>
+      <ion-button expand="block" (click)="submitAndAlert()" style="margin-top: 25px;">
+        Submit
+      </ion-button>
+    </ion-card>
+  </div>
 </ion-content>

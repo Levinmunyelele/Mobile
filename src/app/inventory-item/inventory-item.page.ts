@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { InventoryService } from '../services/inventory.service';
 import { Subscription } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 interface DrugDetails {
   [key: string]: string; 
@@ -23,6 +24,8 @@ export class InventoryItemPage implements OnInit, OnDestroy {
   displayDrugs: boolean = false;
   allDrugDetails: { [id: number]: any } = {};
   programmeName!: string;
+  updatedProgrammeId: string = 'someProgrammeId'; 
+  updatedStatus: string = 'someStatus'; 
   facilityName!: string;
   selectedMonth: string = '';
   selectedYear: number | null = null;
@@ -47,13 +50,16 @@ export class InventoryItemPage implements OnInit, OnDestroy {
   facilityId: number | null = null;
   currentDrug: any;
   showWarning: boolean | false = false;
+  form: any;
+  inventoryId: null | undefined;
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private alertController: AlertController
   ) {
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -90,29 +96,71 @@ export class InventoryItemPage implements OnInit, OnDestroy {
   printPage(): void {
     window.print();
   }
-
+  
   loadFacilities() {
-    this.inventoryService.getFacilities().subscribe((facilities: any[]) => {
-      console.log('Fetched facilities:', facilities);
-      this.matchFacilityId(facilities);
-    }, (error) => {
-      console.error('Error fetching facilities:', error);
-    });
-  }
-
-  matchFacilityId(facilities: any[]) {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    this.facilityName = user.facility || '';
-
-    const matchedFacility = facilities.find((facility: any) => facility.facilityName === this.facilityName);
-
-    if (matchedFacility) {
-      this.facilityId = matchedFacility.facilityId;
-      console.log('Facility ID matched:', this.facilityId);
-    } else {
-      console.warn('No matching facility found for:', this.facilityName);
+    const facilityName = user?.facility; // User's facility name
+    const userSubCountyName = user?.subCounty; // User's subcounty name
+  
+    console.log('User Subcounty Name:', userSubCountyName);
+    console.log('Facility Name:', facilityName);
+  
+    if (!facilityName) {
+      console.error('Facility Name is missing.');
+      return;
     }
+  
+    if (!userSubCountyName) {
+      console.error('User Subcounty Name is missing.');
+      return;
+    }
+  
+    // Fetch all subcounties first
+    this.inventoryService.getSubcounties().subscribe(
+      (subCounties: any[]) => {
+        const userSubCounty = subCounties.find(
+          subCounty => subCounty.subCountyName.toLowerCase().trim() === userSubCountyName.toLowerCase().trim()
+        );
+  
+        if (!userSubCounty) {
+          console.error(`Subcounty not found for user subcounty name: ${userSubCountyName}`);
+          return;
+        }
+  
+        const userSubCountyId = userSubCounty.subCountyId;
+        console.log('User Subcounty ID:', userSubCountyId);
+  
+        // Now fetch facilities based on the userSubCountyId
+        this.inventoryService.getFacilities(userSubCountyId).subscribe(
+          (facilities: any[]) => {
+            if (!facilities.length) {
+              console.error('No facilities found for this subcounty.');
+              return;
+            }
+  
+            // Find the facility that matches the user's facility name
+            const matchedFacility = facilities.find(
+              (facility: any) => facility.facilityName.toLowerCase().trim() === facilityName.toLowerCase().trim()
+            );
+  
+            if (matchedFacility) {
+              this.facilityId = matchedFacility.facilityId;
+              console.log('Facility ID matched:', this.facilityId);
+            } else {
+              console.warn('No matching facility found for:', facilityName);
+            }
+          },
+          (error) => {
+            console.error(`Error fetching facilities for subcountyId: ${userSubCountyId}`, error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error fetching subcounties:', error);
+      }
+    );
   }
+  
   createInventory(drugId: number) {
     if (!this.selectedMonth || !this.selectedYear) {
       this.showWarning = true;
@@ -120,27 +168,31 @@ export class InventoryItemPage implements OnInit, OnDestroy {
     } else {
       this.showWarning = false;
     }
-
+  
+    this.loadFacilities(); 
+  
     if (this.facilityId === null) {
       console.error('Facility ID is not set. Please check loadFacilities() method.');
       return;
     }
-
+  
     const inventoryData = {
       facilityId: this.facilityId,
       programmeId: this.programmeId,
       year: this.selectedYear,
       month: this.selectedMonth,
-      inventoryStatusId: 1,
+      inventoryStatusId: 1,  
       categoryId: 5,
       drugId: drugId
     };
-
+  
     this.inventoryService.createInventory(inventoryData).subscribe(
       (response: any) => {
         if (response && response.inventoryId) {
           const inventoryId = response.inventoryId;
-          this.goToInventoryForm(inventoryId, drugId, this.programmeId);
+          this.inventoryId = inventoryId;  
+          console.log('Inventory created with ID:', this.inventoryId);
+          this.goToInventoryForm(inventoryId, drugId, this.programmeId); 
         } else {
           console.error('Unexpected response structure:', response);
         }
@@ -150,6 +202,7 @@ export class InventoryItemPage implements OnInit, OnDestroy {
       }
     );
   }
+  
 
   loadProgrammeDrugs() {
     console.log(`Fetching drugs for programmeId: ${this.programmeId}`);
@@ -186,9 +239,6 @@ export class InventoryItemPage implements OnInit, OnDestroy {
     );
   }
   
-
-
-
   goToInventoryForm(inventoryId: number, drugId: number, programmeId: number) {
     this.router.navigate(['/inventory-form'], {
       queryParams: {
@@ -213,11 +263,7 @@ export class InventoryItemPage implements OnInit, OnDestroy {
       }
     );
   }
-  
-  
- 
-
-  loadProgrammeName() {
+    loadProgrammeName() {
     console.log('Fetching programme details for programmeId:', this.programmeId);
     this.inventoryService.getProgrammeDetails(this.programmeId).subscribe(
       programmes => {
@@ -241,12 +287,108 @@ export class InventoryItemPage implements OnInit, OnDestroy {
     );
   }
 
+  isExistingInventory(): boolean {
+    return this.inventoryId !== null;
+  }
 
+  async presentAlert(updatedProgrammeId: any, updatedFacilityId: any, inventoryStatusId: number) {
+    const alert = await this.alertController.create({
+      header: 'Report Submission',
+      message: 'Your Report has been submitted successfully.',
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          console.log('Programme ID:', updatedProgrammeId);
+          console.log('Facility ID:', updatedFacilityId);
+          console.log('Inventory Status ID:', inventoryStatusId);
+  
+          this.router.navigate(['/facilitystockreports'], {
+            queryParams: {
+              facilityId: updatedFacilityId,
+              programmeId: updatedProgrammeId,
+              inventoryStatusId: inventoryStatusId,
+            }
+          });
+        }
+      }]
+    });
+  
+    await alert.present();
+  }
+   
 
+  submitForm() {
+    if (!this.selectedMonth || !this.selectedYear) {
+      this.showWarning = true;
+      return;
+    } else {
+      this.showWarning = false;
+    }
+  
+    let inventoryData: any = {
+      facilityId: this.facilityId,
+      programmeId: this.programmeId, 
+      year: this.selectedYear,
+      month: this.selectedMonth,
+      inventoryStatusId: this.isExistingInventory() ? 2 : 1, 
+      categoryId: 5,
+      drugs: this.drugs.map(drug => ({
+        drugId: drug.drugId,
+        beginningBalance: drug.inventory.beginningBalance,
+        received: drug.inventory.received,
+        dispensed: drug.inventory.dispensed,
+        losses: drug.inventory.losses,
+        positiveAdjustment: drug.inventory.positiveAdjustment,
+        negativeAdjustment: drug.inventory.negativeAdjustment,
+      }))
+    };
+  
+    console.log('submitForm: Inventory Data:', inventoryData);
+  
+    if (this.isExistingInventory()) {
+      if (!this.inventoryId) {
+        console.error('Inventory ID is missing, cannot update.');
+        return;
+      }
+  
+      this.inventoryService.updateInventory(this.inventoryId, inventoryData).subscribe(
+        response => {
+          console.log('Inventory updated successfully', response);
+  
+          console.log('submitForm: Calling presentAlert with updated programmeId and status');
+          this.presentAlert(inventoryData.programmeId, inventoryData.facilityId, inventoryData.inventoryStatusId);
+        },
+        error => {
+          console.error('Error updating inventory:', error);
+        }
+      );
+    } else {
+      this.inventoryService.createInventory(inventoryData).subscribe(
+        (response: any) => {
+          if (response && response.inventoryId) {
+            this.inventoryId = response.inventoryId;
+            console.log('Inventory created successfully with ID:', this.inventoryId);
+  
+            console.log('submitForm: Calling presentAlert with created programmeId and status');
+            this.presentAlert(inventoryData.programmeId, inventoryData.facilityId, inventoryData.inventoryStatusId);
+          } else {
+            console.error('Unexpected response structure:', response);
+          }
+        },
+        (error) => {
+          console.error('Error creating inventory:', error);
+        }
+      );
+    }
+  }
+  
+  submitAndAlert() {
+    this.submitForm();
+  }
   goBack() {
     this.router.navigate(['/facilities']);
   }
-
+  
   ngOnDestroy() {
     if (this.inventoryDataSubscription) {
       this.inventoryDataSubscription.unsubscribe();

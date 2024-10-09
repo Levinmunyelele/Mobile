@@ -25,20 +25,10 @@ export class SubhomePage implements OnInit {
   showSearchBar: boolean = false;
   filteredProgrammes: Programme[] = [];
   subcounty: string = '';
+  programmes: Programme[] = []; 
 
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   years: number[] = [2020, 2021, 2022, 2023, 2024];
-  programmeData = [
-    { programmeName: 'Family Planning', reportingRate: 0.8333 },
-    { programmeName: 'Malaria', reportingRate: 0.6667 },
-    { programmeName: 'HIV 2017 Form', reportingRate: 0 },
-    { programmeName: 'TB', reportingRate: 0.6667 },
-    { programmeName: 'Tracer Pharmaceuticals', reportingRate: 0.6667 },
-    { programmeName: 'Tracer Non-Pharmaceuticals', reportingRate: 0.5 },
-    { programmeName: 'RH Pharmaceutical Commodities', reportingRate: 0.6667 },
-    { programmeName: 'RH Non-Pharmaceutical Commodities', reportingRate: 0.6667 },
-    { programmeName: 'HIV 2019 Form', reportingRate: 0.6667 },
-  ];
 
   constructor(
     private router: Router,
@@ -49,6 +39,7 @@ export class SubhomePage implements OnInit {
     private messageTemplateService: MessageTemplateService,
     private notificationService: NotificationService
   ) {}
+
   loadUserDetails() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     if (user && user.subCounty) {
@@ -61,7 +52,7 @@ export class SubhomePage implements OnInit {
   ngOnInit() {
     this.loadUserDetails();
     this.loadNotifications();
-    this.filteredProgrammes = this.programmeData;
+    this.loadProgrammes(); 
   }
 
   loadNotifications(): void {
@@ -74,12 +65,12 @@ export class SubhomePage implements OnInit {
     this.showSearchBar = !this.showSearchBar;
     if (!this.showSearchBar) {
       this.searchQuery = '';
-      this.filteredProgrammes = this.programmeData;
+      this.filteredProgrammes = this.programmes; 
     }
   }
 
   filterProgrammes() {
-    this.filteredProgrammes = this.programmeData.filter(programme =>
+    this.filteredProgrammes = this.programmes.filter(programme =>
       programme.programmeName.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
@@ -108,8 +99,34 @@ export class SubhomePage implements OnInit {
     } else if (reportingRate > 0 && reportingRate < 0.8) {
       return 'warning';
     } else {
-      return 'danger';
+      return 'danger'; 
     }
   }
-}
 
+  loadProgrammes(): void {
+    this.inventoryService.getProgrammes().subscribe(
+      (data: Programme[]) => {
+        this.programmes = data.map((program: any) => ({
+          programmeName: program.programmeName, 
+          reportingRate: 0,
+          programmeId: program.programmeId,     
+        }));
+        this.filteredProgrammes = this.programmes;
+      },
+      (error) => {
+        console.error('Error fetching programmes:', error);
+      }
+    );
+  }  
+
+  navigateToInventoryForm(programme: any) {
+    console.log(`Navigating to inventory page with programmeId: ${programme.programmeId}, programmeName: ${programme.programmeName}`);
+  this.router.navigate(['/programmes'], { 
+    queryParams: { 
+      programmeId: programme.programmeId, 
+      programmeName: programme.programmeName 
+    } 
+  });
+}
+  
+}

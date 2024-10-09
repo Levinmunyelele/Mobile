@@ -26,14 +26,14 @@ const routes: Routes = [
   },
   {
     path: 'forgotpassword',
-    loadChildren: () => import('./forgotpassword/forgotpassword.module').then( m => m.ForgotpasswordPageModule)
+    loadChildren: () => import('./forgotpassword/forgotpassword.module').then( m => m.ForgotpasswordPageModule) 
   },
   {
-    path: 'programme-status',
-    loadChildren: () => import('./programme-status/programme-status.module').then( m => m.ProgrammeStatusPageModule),
+    path: 'programmes',
+    loadChildren: () => import('./programmes/programmes.module').then( m => m.ProgrammesPageModule),
     canActivate: [AuthGuard]
   },
-  {
+  { 
     path: 'facilities',
     loadChildren: () => import('./facilities/facilities.module').then( m => m.FacilitiesPageModule),
     canActivate: [AuthGuard]
@@ -81,7 +81,11 @@ const routes: Routes = [
   {
     path: 'stock-reports',
     loadChildren: () => import('./stock-reports/stock-reports.module').then( m => m.StockReportsPageModule)
+  },  {
+    path: 'inventory-approval',
+    loadChildren: () => import('./inventory-approval/inventory-approval.module').then( m => m.InventoryApprovalPageModule)
   },
+
      
 ];
    

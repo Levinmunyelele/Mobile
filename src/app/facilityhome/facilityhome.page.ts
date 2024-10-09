@@ -47,11 +47,127 @@ export class FacilityhomePage implements OnInit {
           ...program,
           status: 'Not Reported' 
         }));
+
+        this.updateProgrammesWithInventoryStatus();
       },
       (error) => {
-        console.log('Error fetching programs:', error);
+        console.error('Error fetching programs:', error);
       }
     );
+  }
+
+  updateProgrammesWithInventoryStatus() {
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    const facilityName = user?.facility;
+    const userSubCountyName = user?.subCounty;
+
+    console.log('User:', user);
+    console.log('Facility Name:', facilityName);
+    console.log('User Subcounty Name:', userSubCountyName);
+
+    if (!facilityName) {
+      console.error('Facility Name is missing.');
+      return;
+    }
+
+    if (!userSubCountyName) {
+      console.error('User Subcounty Name is missing.');
+      return;
+    }
+
+    this.inventoryService.getProgrammes().subscribe(
+      (data: any) => {
+        console.log('Programs received from service:', data);
+        this.programmes = data.map((program: any) => ({
+          ...program,
+          status: 'Not Reported' 
+        }));
+
+        this.inventoryService.getSubcounties().subscribe(
+          (subCounties: any[]) => {
+            const userSubCounty = subCounties.find(
+              subCounty => subCounty.subCountyName.toLowerCase().trim() === userSubCountyName.toLowerCase().trim()
+            );
+
+            if (!userSubCounty) {
+              console.error(`Subcounty not found for user subcounty name: ${userSubCountyName}`);
+              return;
+            }
+
+            const userSubCountyId = userSubCounty.subCountyId;
+            console.log('User Subcounty ID:', userSubCountyId);
+
+            this.inventoryService.getFacilities(userSubCountyId).subscribe(
+              (facilities: any[]) => {
+                if (!facilities.length) {
+                  console.error('No facilities found for this subcounty.');
+                  return;
+                }
+
+                const facility = facilities.find(
+                  (facility: any) => facility.facilityName.toLowerCase().trim() === facilityName.toLowerCase().trim()
+                );
+
+                if (!facility) {
+                  console.error(`Facility ID not found for the facility name: ${facilityName}`);
+                  return;
+                }
+
+                const facilityId = facility.facilityId;
+                console.log('Facility ID:', facilityId);
+
+                this.programmes.forEach((programme: any) => {
+                  const programmeId = programme.programmeId;
+
+                  this.inventoryService.getInventory({ programmeId, facilityId }).subscribe(
+                    (inventoryData: any) => {
+                      if (inventoryData && inventoryData.inventoryStatusName) {
+                        programme.status = inventoryData.inventoryStatusName;
+                        console.log(`Updated status for ${programme.programmeName}: ${programme.status}`);
+                      } else {
+                        console.warn(`No inventory data found for programmeId: ${programmeId}`);
+                      }
+                    },
+                    (error) => {
+                      console.error(`Error fetching inventory data for programmeId: ${programmeId}`, error);
+                    }
+                  );
+                });
+              },
+              (error) => {
+                console.error(`Error fetching facilities for subcountyId: ${userSubCountyId}`, error);
+              }
+            );
+          },
+          (error) => {
+            console.error('Error fetching subcounties:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error fetching programs:', error);
+      }
+    );
+  }
+
+  getInventoryStatusLabel(inventoryStatusId: number): string {
+    switch (inventoryStatusId) {
+      case 1: return 'Approved';
+      case 2: return 'Pending Approval';
+      case 3: return 'Not Reported';
+      default: return 'Unknown';
+    }
+  }
+
+  updateProgrammeStatus(programmeName: string, status: string) {
+    const programme = this.programmes.find(p => p.programmeName === programmeName);
+
+    if (programme) {
+      programme.status = status;
+      console.log(`Programme ${programmeName} status updated to ${status}`);
+    } else {
+      console.warn(`Programme with name ${programmeName} not found.`);
+    }
   }
     
   loadNotifications(): void {

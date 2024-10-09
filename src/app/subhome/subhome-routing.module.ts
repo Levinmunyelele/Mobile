@@ -8,10 +8,6 @@ const routes: Routes = [
     path: '',
     component: SubhomePage,
   },
-  // {
-  //   path: 'inventory',
-  //   loadChildren: () => import('../inventory/inventory.module').then( m => m.InventoryPageModule)
-  // },
 ];
 
 @NgModule({
