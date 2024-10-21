@@ -31,17 +31,20 @@ ion-col {
   font-weight: bold;
 }
 .col-wrap {
-  white-space: normal; /* Allows text to wrap */
-  overflow: hidden; /* Hides any overflowing text */
-  text-overflow: ellipsis; /* Adds "..." for overflowed text */
-  word-wrap: break-word; /* Breaks words that are too long */
+  white-space: normal; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }
 
 ion-card-title {
-  font-size: 14px; /* Adjust this as per your need */
+  font-size: 14px; 
 }
 
 ion-col {
-  flex: 1; /* Make both columns equal width and flexible */
+  flex: 1; 
+}
+.font{
+  font-weight: 600;
 }
 

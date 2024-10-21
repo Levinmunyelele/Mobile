@@ -81,12 +81,37 @@ const routes: Routes = [
   {
     path: 'stock-reports',
     loadChildren: () => import('./stock-reports/stock-reports.module').then( m => m.StockReportsPageModule)
-  },  {
+  },
+  {
     path: 'inventory-approval',
     loadChildren: () => import('./inventory-approval/inventory-approval.module').then( m => m.InventoryApprovalPageModule)
   },
-
-     
+  {
+    path: 'programme-summary',
+    loadChildren: () => import('./programme-summary/programme-summary.module').then( m => m.ProgrammeSummaryPageModule)
+  },
+  {
+    path: 'inventory-summary',
+    loadChildren: () => import('./inventory-summary/inventory-summary.module').then( m => m.InventorySummaryPageModule)
+  },
+  {
+    path: 'national-programmes',
+    loadChildren: () => import('./national-programmes/national-programmes.module').then( m => m.NationalProgrammesPageModule)
+  },
+  {
+    path: 'national-inventory',
+    loadChildren: () => import('./national-inventory/national-inventory.module').then( m => m.NationalInventoryPageModule)
+  },
+  {
+    path: 'county-stock-summary',
+    loadChildren: () => import('./county-stock-summary/county-stock-summary.module').then( m => m.CountyStockSummaryPageModule)
+  },   {
+    path: 'national-stock-summary',
+    loadChildren: () => import('./national-stock-summary/national-stock-summary.module').then( m => m.NationalStockSummaryPageModule)
+  },
+  {
+    path: 'county-stock-reports',
+    loadChildren: () => import('./county-stock-reports/county-stock-reports.module').then(m => m.CountyStockReportsPageModule)},
 ];
    
 

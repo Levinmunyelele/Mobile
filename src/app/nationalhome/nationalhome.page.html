@@ -1,8 +1,8 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>Natinal Home</ion-title>
+    <ion-title>Home</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="toggleSearchBar()">
         <ion-icon name="search"></ion-icon>
       </ion-button>
       <ion-button (click)="goToNotifications()">
@@ -15,35 +15,59 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-toolbar>
-  <ion-row class="filters">
-    <ion-col size="4" class="region-label">
-      <div style="margin-top: 10px;">Lamu</div>
-    </ion-col>
-    <ion-col size="4">
-      <ion-select [(ngModel)]="selectedMonth" interface="popover">
-        <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
-      </ion-select>
-    </ion-col>
-    <ion-col size="4">
-      <ion-select [(ngModel)]="selectedYear" interface="popover">
-        <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
-      </ion-select>
-    </ion-col>
-  </ion-row>
-</ion-toolbar>
 
-<ion-content>
-  <ion-card *ngFor="let region of regions">
+<ion-content [fullscreen]="true">
+  <ion-card>
     <ion-card-header>
-      <ion-card-title>{{ region.name }}</ion-card-title>
+      <ion-row class="align-center">
+        <ion-col size="6">
+          <ion-card-title>{{ userType}} </ion-card-title>
+        </ion-col>
+        <ion-col size="6" class="ion-text-end">
+          <div class="date-selectors">
+            <ion-select placeholder="Select Month" [(ngModel)]="selectedMonth">
+              <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+            </ion-select>
+
+            <ion-select placeholder="Select Year" [(ngModel)]="selectedYear">
+              <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+            </ion-select>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-card-subtitle>Displaying {{ selectedMonth }} - {{ selectedYear }}</ion-card-subtitle>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-toolbar *ngIf="showSearchBar" color="light">
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterCounties()" placeholder="Search County"></ion-searchbar>
+  </ion-toolbar>
+  <ion-card *ngFor="let county of filteredCounties">  
+    <ion-card-header>
+      <ion-row>
+        <ion-col>
+          <ion-card-title class="heading-bold">
+            {{ county.countyName }}
+          </ion-card-title>
+        </ion-col>
+      </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <div *ngFor="let item of region.items" class="progress-container">
-        <div class="progress-label">{{ item.name }}</div>
-        <ion-progress-bar [value]="item.percentage / 100" [color]="item.color"></ion-progress-bar>
-        <div class="progress-percentage">{{ item.percentage }}%</div>
-      </div>
+      <ion-list>
+        <ion-item *ngFor="let programme of county.programmes">
+          <ion-label  (click)="navigateToProgrammeSummary(programme,county)">
+            {{ programme.programmeName }}
+            <ion-progress-bar [value]="programme.reportingRate" [color]="getProgressBarColor(programme.reportingRate)">
+            </ion-progress-bar>
+            <p [ngClass]="getStatusColor(programme.reportingRate)" class="reporting-rate-text">
+              Reporting Rate: {{ programme.reportingRate | percent }}
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
-</ion-content>

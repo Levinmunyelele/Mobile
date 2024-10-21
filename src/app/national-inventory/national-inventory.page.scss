@@ -1,0 +1,155 @@
+.inventory-card {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    border: none;
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .programme-name-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .resupply-period {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .print-button {
+    --background: #1d434e;
+    --border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  .drug-container {
+    margin-bottom: 20px;
+  }
+  
+  .drug-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .change-button {
+    --background: #1d434e;
+    --border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  .custom-card {
+    --box-shadow: none;
+    --border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  .date-selector {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .expanded-card {
+    height: 20%; 
+  }
+  ion-select {
+    z-index: 1000; 
+  }
+  
+  ion-card {
+    overflow: visible;
+  }
+  .drug-name {
+    font-weight: bold; 
+    font-size: medium; 
+  }
+  .bold-text {
+    font-weight: bold; 
+  }
+  .details-info {
+    font-style: italic; 
+    font-size: small;
+  }
+  
+  .primary-color {
+    color: var(--ion-color-primary); 
+  }
+  .re{
+    font-size: medium;
+    font-weight: bold;
+  }
+  
+  .warning-text {
+    color: red;
+    font-weight: 500;
+    margin-top: 0px;
+  }
+  
+  .fixed-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
+  }
+  
+  .scrollable-content {
+    padding-top: 10px; 
+  }
+
+  @media print {
+    ion-header, .print-exclude {
+      display: none !important; 
+    }
+  
+    ion-content {
+      display: block !important; 
+    }
+  
+    .print-report {
+      page-break-after: always; /* Adds page breaks if needed */
+      font-family: Arial, sans-serif; /* Use a clean font for printing */
+      margin: 20px; /* Adds margin for better readability */
+    }
+  
+    /* Customize table styles for printing */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .table, .table th, .table td {
+      border: 1px solid black; /* Adds border for tables */
+      padding: 8px; /* Adds padding for table cells */
+      text-align: left; /* Aligns text to the left */
+    }
+  
+    h3, h4 {
+      margin: 0;
+      padding: 5px 0;
+    }
+  }
+  

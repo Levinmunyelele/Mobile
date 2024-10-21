@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-title>County Home</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="toggleSearchBar()">
         <ion-icon name="search"></ion-icon>
       </ion-button>
       <ion-button (click)="goToNotifications()">
@@ -16,56 +16,59 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-grid>
-    <ion-row class="filters">
-      <ion-col size="4" class="region-label">
-        <div style="margin-top: 10px;">{{ county }} </div>
-      </ion-col>
-      <ion-col size="4">
-        <ion-select [(ngModel)]="selectedMonth" interface="popover">
-          <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
-        </ion-select>
-      </ion-col>
-      <ion-col size="4" >
-        <ion-select [(ngModel)]="selectedYear" interface="popover">
-          <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
-        </ion-select>
-      </ion-col>
-    </ion-row>
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="align-center">
+        <ion-col size="6">
+          <ion-card-title class="bold">{{ userCounty }} </ion-card-title>
+        </ion-col>
+        <ion-col size="6" class="ion-text-end">
+          <div class="date-selectors">
+            <ion-select [(ngModel)]="selectedMonth" interface="popover">
+              <ion-select-option *ngFor="let month of months" [value]="month">{{ month }}</ion-select-option>
+            </ion-select>
+            <ion-select [(ngModel)]="selectedYear" interface="popover">
+              <ion-select-option *ngFor="let year of years" [value]="year">{{ year }}</ion-select-option>
+            </ion-select>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-card-subtitle class="color">Displaying {{ selectedMonth }} - {{ selectedYear }}</ion-card-subtitle>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
 
-    <ion-row class="reporting-period">
-      <ion-col size="12">
-        <h4>Displaying {{ selectedMonth }} - {{ selectedYear }}</h4>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size="12">
-        <hr class="divider">
-      </ion-col>
-    </ion-row>
+  <ion-toolbar *ngIf="showSearchBar" color="light">
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterSubCounties()" placeholder="Search Subcounty"></ion-searchbar>
+  </ion-toolbar>
 
-    <ion-row>
-      <ion-col size="12">
-        <ion-list>
-          <ion-item class="header">
-            <ion-label style="font-weight: bold;">Programme</ion-label>
-            <ion-label style="font-weight: bold;" slot="end">Reporting Rate</ion-label>
-          </ion-item>
-          <ion-item-group *ngFor="let group of reportData">
-            <ion-item-divider color="light">
-              <ion-label>{{ group.name }}</ion-label>
-            </ion-item-divider>
-            <ion-item *ngFor="let item of group.items">
-              <ion-label>{{ item.programme }}</ion-label>
-              <div slot="end" class="progress-container">
-                <ion-progress-bar [value]="item.rate / 100" color="success"></ion-progress-bar>
-                <span class="rate">{{ item.rate }}%</span>
-              </div>
-            </ion-item>
-          </ion-item-group>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-card *ngFor="let subcounty of filteredSubcounties">
+    <ion-card-header>
+      <ion-row>
+        <ion-col>
+          <ion-card-title class="heading-bold">
+            {{ subcounty.subCountyName || 'No Subcounty Name' }}
+          </ion-card-title>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let programme of programmes">
+          <ion-label  (click)="navigateToProgrammeSummary(programme, subcounty)">
+            {{ programme.programmeName }}
+            <ion-progress-bar [value]="programme.reportingRate" [color]="getProgressBarColor(programme.reportingRate)">
+            </ion-progress-bar>
+            <p [ngClass]="getStatusColor(programme.reportingRate)" class="reporting-rate-text">
+              Reporting Rate: {{ programme.reportingRate | percent }}
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

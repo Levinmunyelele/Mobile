@@ -25,7 +25,7 @@
     <ion-card-header>
       <ion-row>
         <ion-col>
-          <ion-button (click)="printPage()"  size="small" class="print-button">Print</ion-button>
+          <ion-button (click)="printPage()" size="small" class="print-button">Print</ion-button>
         </ion-col>
         <ion-col class="ion-text-end date-col">
           <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
@@ -34,12 +34,11 @@
     </ion-card-header>
   </ion-card>
   <ion-card class="ex">
-    <ion-row class="row">   
+    <ion-row class="row">
       <ion-card-title>{{ programmeName }}</ion-card-title>
-  </ion-row>
-
+    </ion-row>
   </ion-card>
- 
+
   <ion-card *ngIf="displayDrugs">
     <div *ngFor="let drug of drugs" class="drug-container">
       <ion-card class="custom-card">
@@ -88,13 +87,11 @@
               </tr>
             </tbody>
           </table>
-         </ion-card-content>
+        </ion-card-content>
       </ion-card>
     </div>
     <p><i> Quantity Requested is Different from Quantity Dispatched by KEMSA</i></p>
     <p><i>Quantity Dispensed is less than AMC * 1.5 </i></p>
-    
-    <ion-button expand="block" type="submit" style="margin-top: 25px;">Submit</ion-button>
   </ion-card>
-  
+
 </ion-content>

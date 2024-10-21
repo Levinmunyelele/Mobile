@@ -93,9 +93,8 @@ export class SubstocksummaryPage implements OnInit {
   }
 
   loadFacilities() {
-    // Retrieve the subCountyId from the session or wherever it's stored
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    const userSubCountyId = user?.subCounty; // Assuming subCountyId is stored in the user object
+    const userSubCountyId = user?.subCounty; 
   
     console.log('User Subcounty ID:', userSubCountyId);
   
@@ -104,7 +103,6 @@ export class SubstocksummaryPage implements OnInit {
       return;
     }
   
-    // Call the inventoryService.getFacilities() with the subCountyId
     this.inventoryService.getFacilities(userSubCountyId).subscribe(
       (facilities: any[]) => {
         console.log('Fetched facilities:', facilities);

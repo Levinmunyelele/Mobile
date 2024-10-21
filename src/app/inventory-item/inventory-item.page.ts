@@ -69,6 +69,7 @@ export class InventoryItemPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loadUserDetails();
     this.loadFacilities();
     this.route.queryParams.subscribe(params => {
       this.programmeId = +params['programmeId'];
@@ -97,10 +98,18 @@ export class InventoryItemPage implements OnInit, OnDestroy {
     window.print();
   }
   
+  loadUserDetails() {
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (user && user.facility) {
+      this.facilityName = user.facility; 
+    } else {
+      console.warn('User or facility information not found.');
+    }
+  }
   loadFacilities() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    const facilityName = user?.facility; // User's facility name
-    const userSubCountyName = user?.subCounty; // User's subcounty name
+    const facilityName = user?.facility; 
+    const userSubCountyName = user?.subCounty; 
   
     console.log('User Subcounty Name:', userSubCountyName);
     console.log('Facility Name:', facilityName);
@@ -115,7 +124,6 @@ export class InventoryItemPage implements OnInit, OnDestroy {
       return;
     }
   
-    // Fetch all subcounties first
     this.inventoryService.getSubcounties().subscribe(
       (subCounties: any[]) => {
         const userSubCounty = subCounties.find(
@@ -130,16 +138,13 @@ export class InventoryItemPage implements OnInit, OnDestroy {
         const userSubCountyId = userSubCounty.subCountyId;
         console.log('User Subcounty ID:', userSubCountyId);
   
-        // Now fetch facilities based on the userSubCountyId
         this.inventoryService.getFacilities(userSubCountyId).subscribe(
           (facilities: any[]) => {
             if (!facilities.length) {
               console.error('No facilities found for this subcounty.');
               return;
             }
-  
-            // Find the facility that matches the user's facility name
-            const matchedFacility = facilities.find(
+              const matchedFacility = facilities.find(
               (facility: any) => facility.facilityName.toLowerCase().trim() === facilityName.toLowerCase().trim()
             );
   
@@ -191,7 +196,7 @@ export class InventoryItemPage implements OnInit, OnDestroy {
         if (response && response.inventoryId) {
           const inventoryId = response.inventoryId;
           this.inventoryId = inventoryId;  
-          console.log('Inventory created with ID:', this.inventoryId);
+          console.log('Inventory created with ID:', response);
           this.goToInventoryForm(inventoryId, drugId, this.programmeId); 
         } else {
           console.error('Unexpected response structure:', response);
@@ -326,6 +331,7 @@ export class InventoryItemPage implements OnInit, OnDestroy {
     }
   
     let inventoryData: any = {
+      inventoryId: this.inventoryId, 
       facilityId: this.facilityId,
       programmeId: this.programmeId, 
       year: this.selectedYear,

@@ -18,7 +18,9 @@ export class FacilityhomePage implements OnInit {
   programmes!: any[];
   currentDate!: Date;
   newNotificationsCount: number = 0;
-
+  searchStatus: string = '';  
+  filterProgrammes: any[] = []; 
+  showSearchBar: boolean | undefined;
 
   constructor(private router:Router, private http:HttpClient, private inventoryService: InventoryService , private menuController:MenuController,  private notificationService: NotificationService) { }
   
@@ -191,6 +193,25 @@ export class FacilityhomePage implements OnInit {
   }
   toggleMenu() {
     this.menuController.toggle('menu'); 
+  }
+
+
+  filterProgrammesByStatus() {
+    if (this.searchStatus) {
+      this.filterProgrammes = this.programmes.filter(programme =>
+        programme.status.toLowerCase().includes(this.searchStatus.toLowerCase())
+      );
+    } else {
+      this.filterProgrammes = this.programmes;
+    }
+  }
+
+  toggleSearchBar() {
+    this.showSearchBar = !this.showSearchBar;
+    if (!this.showSearchBar) {
+      this.searchStatus = '';  
+      this.filterProgrammesByStatus(); 
+    }
   }
 
   goToNotifications(): void {

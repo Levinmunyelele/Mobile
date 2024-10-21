@@ -1,89 +1,89 @@
-.page-reporting-rate {
-  ion-toolbar {
-    --background: #1d434e;
-    --color: #fff;
-  }
-
-  // .filters {
-  //   margin-top: 10px;
-  //   display: flex;
-  //   align-items: center;
-
-    // .region-label {
-    //   display: flex;
-    //   align-items: center;
-    //   margin-top: 10px;
-
-    //   // .label-text {
-    //   //   font-size: 1.2em;
-    //   //   color: #1d434e;
-    //   //   margin-top: 15px;
-    //   // }
-    // }
-
-    // .search-col {
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: center;
-    // }
-  // }
-
-  .reporting-period {
-    margin-top: 10px;
-
-    h3 {
-      text-align: center;
-      color: #1d434e;
-    }
-  }
-
-  ion-content {
-    --padding-start: 15px;
-    --padding-end: 15px;
-
-    ion-item.header {
-      background-color: #f1f1f1;
-      font-weight: bolder;
-
-      ion-label {
-        color: #1d434e;
-      }
-    }
-
-    ion-item {
-      --border-color: #1d434e;
-      border-radius: 10px;
-      margin-bottom: 10px;
-
-      ion-label {
-        color: #1d434e;
-      }
-    }
-
-    ion-item-divider {
-      background-color: #f1f1f1;
-      font-size: 1.2em;
-     
-      ion-label {
-        color: #1d434e;
-      }
-    }
-
-    .progress-container {
-      display: flex;
-      align-items: center;
-
-      ion-progress-bar {
-        width: 100px;
-        height: 20px;
-        margin-right: 10px;
-        border-radius: 10px;
-      }
-
-      .rate {
-        font-weight: bold;
-        color: #1d434e;
-      }
-    }
-  }
+.heading-bold {
+  font-weight: bold;
 }
+
+.reporting-rate {
+  display: flex;
+  align-items: center;
+}
+
+.reporting-rate ion-icon {
+  margin-right: 8px;
+}
+
+.badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 6px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.date-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.date-selectors {
+  display: flex;
+  align-items: center;
+}
+
+.date-selectors ion-select {
+  margin-right: 10px;
+  color: black;
+}
+
+ion-progress-bar {
+  --background: #f0f0f0;
+  --progress-background: #007bff; 
+  height: 8px;  
+  border-radius: 4px;
+  margin-bottom: 8px;  
+}
+
+.program-name {
+  font-size: 14px;  
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.reporting-rate-text {
+  font-size: 12px;  
+  font-weight: 500;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.low-rate {
+  color: #ff4d4d; 
+}
+
+.medium-rate {
+  color: #ffcc00; 
+}
+
+.high-rate {
+  color: #4CAF50; 
+}
+
+ion-item {
+  margin: 6px 0;  
+  padding: 0;
+}
+
+h3 {
+  font-size: 14px; 
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.color{
+  color: black;
+}
+.bold{
+  font-weight: bold;
+}
+

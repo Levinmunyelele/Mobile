@@ -16,7 +16,10 @@ const routes: Routes = [
     component: NationalPage,
     children: [
       { path: 'home', loadChildren: () => import('../home/home.module').then(m => m.HomePageModule) },
-      { path: 'stock-reports', loadChildren: () => import('../stock-reports/stock-reports.module').then(m => m.StockReportsPageModule) },
+      {
+        path: 'national-stock-reports',
+        loadChildren: () => import('../national-stock-reports/national-stock-reports.module').then( m => m.NationalStockReportsPageModule)
+      },
       { path: 'helper', loadChildren: () => import('../helper/helper.module').then(m => m.HelperPageModule) },
       { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule) },
       {

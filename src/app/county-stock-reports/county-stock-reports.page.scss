@@ -1,0 +1,51 @@
+
+
+ion-row {
+    border-bottom: 1px solid #ccc;
+  }
+  ion-col {
+    border-right: 1px solid #ccc;
+    padding: 8px;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  .date-container {
+    flex: 1;
+    text-align: right;
+    font-weight: bolder;
+  }
+  .long-button {
+    flex: 1;
+    margin-right: 10px; 
+    margin-bottom: 10px;
+  }
+  .buttons-row {
+    padding: 10px;
+  }
+  .custom-color-button {
+    --ion-color-primary: #1d434e;
+  }
+  .heading-bold{
+    font-weight: bold;
+  }
+  .col-wrap {
+    white-space: normal; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+  }
+  
+  ion-card-title {
+    font-size: 14px; 
+  }
+  
+  ion-col {
+    flex: 1; 
+  }
+  .bold{
+    font-weight: bold;
+  }
+  
+  

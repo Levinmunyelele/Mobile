@@ -33,10 +33,15 @@
   
   .date-selectors {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
   }
   
   .date-selectors ion-select {
-    margin-right: 10px;
+    margin-right: 8px; 
+    color: black;
   }
   
+  .color{
+    color: black;
+  }

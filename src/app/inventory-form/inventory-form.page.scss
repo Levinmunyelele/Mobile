@@ -1,97 +1,55 @@
-/* inventory-form.component.scss */
-
-.form-group {
-  margin-bottom: 1rem;
-  margin-left: 20px;
+.inventory-form-content {
+  padding: 15px;
 }
 
-.form-group label {
-  display: block;
+.drug-info-card {
+  margin-bottom: 15px;
+}
+
+.drug-name {
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 5px;
+  color: #1d434e;
 }
 
-input[type="number"],
-textarea {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
+.form-instructions {
+  font-style: italic;
+  font-size: 0.9rem;
+  margin: 10px 15px;
 }
 
-textarea {
-  resize: vertical;
+.mandatory-asterisk {
+  color: #9e1c25;
 }
 
-button[type="submit"] {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  margin-left: 50px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+ion-item {
+  --inner-padding-start: 8px;
+  --padding-start: 8px;
+  margin-bottom: 3px;
 }
 
-button[type="submit"]:hover {
-  background-color: #45A049;
-
-}
-
-.floating-label {
-  margin-left: 15px;
-  font-size: 1em;
-  color: #333;
+ion-label {
+  font-size: 1rem;
+  padding-bottom: 8px; 
 }
 
 .mandatory {
   color: #9e1c25;
 }
 
-.input-container {
-  margin-bottom: 15px;
-  margin-left: 15px;
-  --padding-start: 0; 
-  --inner-padding-end: 0; 
-}
-
-.bordered-input {
-  border: 1px solid #050101;
+ion-input, ion-textarea {
+  --padding-start: 8px;
   border-radius: 4px;
-  padding: 8px;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.input-box {
-  margin-bottom: 20px;
-}
-
-.input-box label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.input-box ion-input {
-  display: block;
-  width: 100%;
   border: 1px solid #ccc;
-  border-radius: 5px;
   padding: 10px;
 }
 
-ion-label {
-  font-weight: bolder;
- 
+ion-textarea {
+  min-height: 120px; 
 }
 
-.large-textarea {
-  height: 150x; /* Adjust the height as needed */
-  border: 1px solid #050101;
-  border-radius: 4px;
-  font-size: 20px;
-  padding: 8px; /* Add padding for better text readability */
-  box-sizing: border-box; /* Ensure padding and border are included in height and width */
-  width: 100%; /* Make the textarea take the full width of its container */
+.save-button {
+  margin-top: 25px;
+  --background: #1d434e;
+  --border-radius: 6px;
 }

@@ -185,34 +185,81 @@ ion-content p {
 
 
 ion-content table {
-    font-size: 12px !important; 
+    font-size: 12px !important;
 }
 
 ion-content table td,
 ion-content table th {
-    font-size: 10px !important; 
+    font-size: 10px !important;
 }
+
 ion-content h3 {
     font-size: 14px !important;
 }
+
 ion-list,
 ion-item,
 ion-label {
-    font-size: 12px !important; 
+    font-size: 12px !important;
 }
+
 ion-toolbar ion-title {
-    font-size: 16px !important; 
+    font-size: 16px !important;
 }
+
 ion-card-header {
     border-bottom: none !important;
-  }
-  
-  ion-row {
+}
+
+ion-row {
     border: none !important;
-  }
-  
-  ion-col {
+}
+
+ion-col {
     border: none !important;
     padding: 0 !important;
+}
+
+ion-card-content {
+    padding: 8px !important; 
+  }
+  
+  ion-card {
+    margin-bottom: 8px !important; 
+  }
+  
+  ion-card-header {
+    padding: 8px !important; 
+    margin-bottom: 0 !important; 
+  }
+  
+  ion-card-title {
+    font-size: 14px !important; 
+    margin: 0 !important; 
+  }
+  
+  ion-list {
+    padding: 0 !important;
+  }
+  
+  ion-item {
+    padding: 4px 0 !important; 
+    --inner-padding: 0px !important; 
+    --min-height: 40px !important;
+}
+  
+  ion-label {
+    font-size: 12px !important;
+    margin: 0 !important; 
+}
+  
+  ion-progress-bar {
+    --height: 6px !important; 
+    margin: 4px 0 !important; 
+  }
+  
+  .reporting-rate-text {
+    font-size: 10px !important;
+    margin: 2px 0 !important; 
   }
   

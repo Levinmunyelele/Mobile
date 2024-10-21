@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Programme Summary</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleSearchBar()">
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+      <ion-button (click)="toggleMenu()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-col>
+        <ion-card-title>{{ programmeName }}</ion-card-title>
+      </ion-col>
+      <ion-col class="ion-text-end date-col">
+        <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
+      </ion-col>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="name">{{ countyName }}</ion-row>
+    </ion-card-header>
+  </ion-card>
+  <ion-toolbar *ngIf="showSearchBar" color="light">
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterSubCounties()" placeholder="Search County"></ion-searchbar>
+  </ion-toolbar>
+  <ng-container *ngFor="let subcounty of subcounties">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="heading-bold">{{ subcounty.subCountyName }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col>
+            <ion-card-title class="bold">Facility</ion-card-title>
+          </ion-col>
+          <ion-col class="ion-text-end">
+            <ion-card-title class="heading-bold">Status</ion-card-title>
+          </ion-col>
+        </ion-row>
+        <ion-list>
+          <ng-container *ngFor="let facility of subcounty.facilities">
+            <ion-item>
+              <ion-label>
+                {{ facility.facilityName }}
+              </ion-label>
+              <ion-label slot="end">
+                <div class="status-div" [ngClass]="getStatusColor(facility.status)"
+                (click)="navigateToInventorySummary(programmeId, facility, subcounty.subCountyName, subcounty.subCountyId,countyId, countyName)">
+                {{ facility.status }}
+                </div>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+</ion-content>

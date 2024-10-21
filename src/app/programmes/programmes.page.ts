@@ -23,6 +23,8 @@ export class ProgrammesPage implements OnInit {
   filteredFacilities: any[] | undefined;
   programmeName: any;
   programmeId: any;
+  searchStatus: string = '';  
+  filterFacilities: any[] = []; 
 
   constructor(
     private router: Router,
@@ -47,6 +49,8 @@ export class ProgrammesPage implements OnInit {
     this.loadNotifications();
     this.loadFacilities();
     this.loadInventoryStatuses();
+    this.filteredFacilities = this.facilities;
+
   }
 
   loadUserDetails() {
@@ -119,22 +123,9 @@ export class ProgrammesPage implements OnInit {
     });
   }
 
-  filterFacilities() {
-    this.filteredFacilities = this.facilities.filter(facility =>
-      facility.facilityName.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
-  }
 
   goBack() {
     this.router.navigate(['/sub-counties']);
-  }
-
-  toggleSearchBar() {
-    this.showSearchBar = !this.showSearchBar;
-    if (!this.showSearchBar) {
-      this.searchQuery = '';
-      this.filterFacilities();
-    }
   }
 
   loadNotifications(): void {
@@ -162,15 +153,39 @@ export class ProgrammesPage implements OnInit {
     this.menuController.toggle('menu');
   }
 
+  filterFacilitiesByStatus() {
+    if (this.searchStatus.trim()) {
+      this.filteredFacilities = this.facilities.filter(facility =>
+        facility.status.toLowerCase().includes(this.searchStatus.toLowerCase())
+      );
+    } else {
+      this.filteredFacilities = this.facilities;
+    }
+  }
+  
+  toggleSearchBar() {
+    this.showSearchBar = !this.showSearchBar;
+    if (!this.showSearchBar) {
+      this.searchStatus = '';
+      this.filteredFacilities = this.facilities;
+    }
+  }
+  
+
   navigateToInventoryApproval(programme: any, facility: any) {
     console.log(`Navigating to inventory page with programmeId: ${programme.programmeId}, facilityId: ${facility.facilityId}, subcountyId: ${this.subcountyId}`);
-        this.router.navigate(['/inventory-approval'], { 
-      queryParams: { 
-        programmeId: programme.programmeId, 
-        facilityId: facility.facilityId, 
-        subcountyId: this.subcountyId 
-      } 
-    });
+  
+    if (facility.status === 'Pending Approval' || facility.status === 'Approved') {
+      this.router.navigate(['/inventory-approval'], { 
+        queryParams: { 
+          programmeId: programme.programmeId, 
+          facilityId: facility.facilityId, 
+          subcountyId: this.subcountyId 
+        } 
+      });
+    } else {
+      console.warn(`Facility ${facility.facilityName} does not have a valid status for navigation.`);
+    }
   }
   
   

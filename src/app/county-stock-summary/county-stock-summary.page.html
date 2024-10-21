@@ -1,0 +1,93 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Stock Summary</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <div class="fixed-header">
+    <ion-card class="expand">
+      <ion-card-header>
+        <ion-row>
+        <ion-col>
+          <ion-button (click)="printPage()" shape="round" size="small" class="print-button">Print</ion-button>
+        </ion-col>
+        <ion-col class="ion-text-end date-col">
+          <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
+        </ion-col>
+      </ion-row>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-row>
+          <ion-col>
+            <ion-card-title>{{ programmeName }}</ion-card-title>
+          </ion-col>
+          <ion-col class="ion-text-end date-col">
+            <ion-card-title>{{ subCountyName }}</ion-card-title>
+          </ion-col>
+        </ion-row>
+      </ion-card-header>
+    </ion-card>
+  </div>
+  <div class="scrollable-content">
+    <ion-card *ngIf="displayDrugs">
+      <div *ngFor="let drug of drugs" class="drug-container">
+        <ion-card class="custom-card">
+          <ion-card-content>
+            <div class="header-container">
+              <h3 class="drug-name">{{ drug.drugName }} </h3>
+            </div>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td class="bold-text">Beginning balance: {{ drug.inventory.beginningBalance || '0' | number:'1.2-2' }}</td>
+                  <td>Months of Stock: {{ drug.inventory.monthsOfStock || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Received: {{ drug.inventory.received || '0' | number:'1.2-2' }}</td>
+                  <td>Dispatched KEMSA: {{ drug.inventory.dispatchedKEMSA || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Dispensed: {{ drug.inventory.dispensed || '0' | number:'1.2-2' }}</td>
+                  <td>AMC: {{ drug.inventory.averageMonthlyConsumption || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Losses: {{ drug.inventory.losses || '0' | number:'1.2-2' }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Positive Adj: {{ drug.inventory.positiveAdjustment || '0' | number:'1.2-2' }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Negative Adj: {{ drug.inventory.negativeAdjustment || '0' | number:'1.2-2' }}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Days Out Of Stock: {{ drug.inventory.daysOutOfStock || '0' | number:'1.2-2' }}</td>
+                  <td>Adj. Consumption: {{ drug.inventory.adjustmentConsumption || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td class="bold-text">Ending balance: {{ drug.inventory.endingBalance || '0' | number:'1.2-2' }}</td>
+                  <td>Comp. Ending balance: {{ drug.inventory.computedEndingBalance || '0' | number:'1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>Quantity Requested: {{ drug.inventory.quantityRequested || '0' | number:'1.2-2' }}</td>
+                  <td>Quantity to Order: {{ drug.inventory.quantityToOrder || '0' | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-card>
+  </div>
+</ion-content>

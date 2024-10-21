@@ -66,6 +66,7 @@
 .table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
 .date-selector {
   display: flex;
   gap: 8px;
@@ -73,50 +74,59 @@
 }
 
 .expanded-card {
-  height: 33%; 
+  height: 45%;
 }
+
 ion-select {
-  z-index: 1000; 
+  z-index: 1000;
 }
 
 ion-card {
   overflow: visible;
 }
+
 .drug-name {
-  font-weight: bold; 
-  font-size: medium; 
+  font-weight: bold;
+  font-size: medium;
 }
+
 .bold-text {
-  font-weight: bold; 
+  font-weight: bold;
 }
+
 .details-info {
-  font-style: italic; 
+  font-style: italic;
   font-size: small;
 }
 
 .primary-color {
-  color: var(--ion-color-primary); 
+  color: var(--ion-color-primary);
 }
-.re{
+
+.re {
   font-size: medium;
   font-weight: bold;
 }
-.expand{
-  height: 10%; 
 
+.expand {
+  height: 100%;
+  margin-top: 60px;
 }
+
 .warning-text {
   color: red;
   font-weight: 500;
   margin-top: 0px;
 }
+
 .fixed-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100; /* Ensure it's above other content */
+  z-index: 100;
 }
-.content{
-  padding-top: 220px;
+
+.content {
+  padding-top: 250px;
 }

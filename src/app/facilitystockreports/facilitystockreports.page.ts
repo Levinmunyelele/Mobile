@@ -16,7 +16,7 @@ export class FacilitystockreportsPage implements OnInit {
   facilityName!: string;
   selectedMonth: string = 'July';
   selectedYear: number = 2024;
-  inventoryData!: any[]; 
+  inventoryData!: any[];
   programmes!: any[];
   currentDate!: Date;
   newNotificationsCount: number = 0;

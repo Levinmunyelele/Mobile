@@ -11,7 +11,6 @@ interface Programme {
   programmeName: string;
   reportingRate: number;
 }
-
 @Component({
   selector: 'app-subhome',
   templateUrl: './subhome.page.html',
@@ -25,7 +24,7 @@ export class SubhomePage implements OnInit {
   showSearchBar: boolean = false;
   filteredProgrammes: Programme[] = [];
   subcounty: string = '';
-  programmes: Programme[] = []; 
+  programmes: Programme[] = [];
 
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   years: number[] = [2020, 2021, 2022, 2023, 2024];
@@ -38,12 +37,12 @@ export class SubhomePage implements OnInit {
     private menuController: MenuController,
     private messageTemplateService: MessageTemplateService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   loadUserDetails() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     if (user && user.subCounty) {
-      this.subcounty = user.subCounty;  
+      this.subcounty = user.subCounty;
     } else {
       console.warn('User or subcounty information not found.');
     }
@@ -52,7 +51,7 @@ export class SubhomePage implements OnInit {
   ngOnInit() {
     this.loadUserDetails();
     this.loadNotifications();
-    this.loadProgrammes(); 
+    this.loadProgrammes();
   }
 
   loadNotifications(): void {
@@ -65,7 +64,7 @@ export class SubhomePage implements OnInit {
     this.showSearchBar = !this.showSearchBar;
     if (!this.showSearchBar) {
       this.searchQuery = '';
-      this.filteredProgrammes = this.programmes; 
+      this.filteredProgrammes = this.programmes;
     }
   }
 
@@ -80,26 +79,15 @@ export class SubhomePage implements OnInit {
   }
 
   goToNotifications(): void {
-    this.router.navigate(['/notification']); 
+    this.router.navigate(['/notification']);
   }
-
-  getStatusIcon(reportingRate: number): string {
-    if (reportingRate >= 0.8) {
-      return 'checkmark-circle';
-    } else if (reportingRate > 0 && reportingRate < 0.8) {
-      return 'alert-circle';
-    } else {
-      return 'close-circle';
-    }
-  }
-
   getStatusColor(reportingRate: number): string {
     if (reportingRate >= 0.8) {
       return 'success';
     } else if (reportingRate > 0 && reportingRate < 0.8) {
       return 'warning';
     } else {
-      return 'danger'; 
+      return 'danger';
     }
   }
 
@@ -107,9 +95,9 @@ export class SubhomePage implements OnInit {
     this.inventoryService.getProgrammes().subscribe(
       (data: Programme[]) => {
         this.programmes = data.map((program: any) => ({
-          programmeName: program.programmeName, 
+          programmeName: program.programmeName,
           reportingRate: 0,
-          programmeId: program.programmeId,     
+          programmeId: program.programmeId,
         }));
         this.filteredProgrammes = this.programmes;
       },
@@ -117,16 +105,16 @@ export class SubhomePage implements OnInit {
         console.error('Error fetching programmes:', error);
       }
     );
-  }  
+  }
 
   navigateToInventoryForm(programme: any) {
     console.log(`Navigating to inventory page with programmeId: ${programme.programmeId}, programmeName: ${programme.programmeName}`);
-  this.router.navigate(['/programmes'], { 
-    queryParams: { 
-      programmeId: programme.programmeId, 
-      programmeName: programme.programmeName 
-    } 
-  });
-}
-  
+    this.router.navigate(['/programmes'], {
+      queryParams: {
+        programmeId: programme.programmeId,
+        programmeName: programme.programmeName
+      }
+    });
+  }
+
 }
