@@ -22,7 +22,7 @@ export class Login2Page {
   changetype: boolean = true;
   rememberMe: boolean = false;
 
-  
+
 
 
 
@@ -58,23 +58,22 @@ export class Login2Page {
       localStorage.removeItem('mobile');
     }
   }
-  login(){
-    const mobile = this.mobile.replace(/\D/g, '');
+  login() {
+    const mobile = this.mobile.replace(/\D/g, ''); 
 
-    this.loginService.login({mobile,password:this.password}).subscribe({
-      next:(response:any)=>{
-        console.log(response)
-               console.log('Login successful:', response);
+    if (mobile.length !== 10) {
+      this.errorMessage = 'Please enter a valid 10-digit mobile number.';
+      return;
+    }
+    this.loginService.login({ mobile, password: this.password }).subscribe({
+      next: (response: any) => {
         if (response) {
           const { data, token } = response;
-          const numericMobile = this.mobile.replace(/\D/g, '');
-          
-        
-          sessionStorage.setItem('mobile', numericMobile);
+
+          sessionStorage.setItem('mobile', mobile);
           sessionStorage.setItem('token', token);
           sessionStorage.setItem('user', JSON.stringify(data));
-  
-          
+
           switch (data.userType) {
             case 'National':
               this.router.navigate(['./national']);
@@ -95,16 +94,15 @@ export class Login2Page {
               break;
           }
         }
-    
       },
-      error:(error)=>{
-        console.log(error)
+      error: (error) => {
+        this.errorMessage = 'Incorrect mobile number or password. Please try again.';
+        console.error('Login error:', error);
       }
-    })
-    
+    });
   }
 
-  
+
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
     this.changetype = !this.changetype
