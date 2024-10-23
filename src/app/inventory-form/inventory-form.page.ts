@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InventoryService } from '../services/inventory.service';
+import { LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-inventory-form',
@@ -15,12 +17,16 @@ export class InventoryFormPage implements OnInit {
   drugId: number | null = null;
   programmeId: number | null = null;
   inventoryId: number | null = null;
+  loading: any;
+
 
   constructor(
     private router: Router,
     private httpclient: HttpClient,
     private activatedRoute: ActivatedRoute,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private loadingController: LoadingController,
+
   ) {
     this.reactiveForm = new FormGroup({
       beginningBalance: new FormControl(null, [Validators.required]),
@@ -53,29 +59,29 @@ export class InventoryFormPage implements OnInit {
       if (this.drugId) {
         this.loadDrugName(this.drugId);
         if (this.inventoryId) {
-          this.loadInventoryData(this.inventoryId,this.drugId);
+          this.loadInventoryData(this.inventoryId, this.drugId);
         }
       }
     });
   }
   loadDrugName(drugId: number) {
-    this.httpclient.get(`http://qualipharmapi.local/v1/drugs/${drugId}`)
-      .subscribe(
-        (response: any) => {
-          this.drugName = response.drugName;
-          console.log('Fetched drug name:', this.drugName);
-        },
-        error => {
-          console.error('Error fetching drug name:', error);
-        }
-      );
+    this.inventoryService.loadDrugName(drugId).subscribe(
+      (response: any) => {
+        console.log('API Response:', response);
+        this.drugName = response.drugName;
+        console.log('Fetched drug name:', this.drugName);
+      },
+      error => {
+        console.error('Error fetching drug name:', error);
+      }
+    );
   }
 
-  loadInventoryData(inventoryId: number,drugId:number) {
-    this.inventoryService.getInventoryLineByDrugId('?drugId='+drugId).subscribe(
+  loadInventoryData(inventoryId: number, drugId: number) {
+    this.inventoryService.getInventoryLineByDrugId('?drugId=' + drugId).subscribe(
       data => {
-        if (data.length > 0){
-        this.reactiveForm.patchValue(data[data.length-1]);
+        if (data.length > 0) {
+          this.reactiveForm.patchValue(data[data.length - 1]);
         }
       },
       error => {
@@ -96,7 +102,7 @@ export class InventoryFormPage implements OnInit {
     this.reactiveForm.get('endingBalance')?.setValue(endingBalance, { emitEvent: false });
   }
 
-  onSubmit() {
+  async onSubmit() {
     const formValue = this.reactiveForm.getRawValue();
 
     if (!this.inventoryId) {
@@ -128,6 +134,12 @@ export class InventoryFormPage implements OnInit {
 
     console.log('Submitting inventory data:', updatedInventoryData);
 
+    this.loading = await this.loadingController.create({
+      message: 'Saving data...',
+    });
+
+    await this.loading.present();
+
     this.inventoryService.saveInventoryData(updatedInventoryData).subscribe(
       response => {
         console.log('Inventory data saved:', response);
@@ -143,6 +155,9 @@ export class InventoryFormPage implements OnInit {
       },
       error => {
         console.error('Error saving inventory data:', error);
+      },
+      () => {
+        this.loading.dismiss();
       }
     );
   }

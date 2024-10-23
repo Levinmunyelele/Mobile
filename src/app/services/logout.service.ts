@@ -9,10 +9,8 @@ export class LogoutService {
   constructor(private router: Router) {}
 
   logout() {
-    // Remove only authentication tokens or session data
-    localStorage.removeItem('authToken'); // Example: remove auth token
+    localStorage.removeItem('authToken'); 
 
-    // Navigate to the login page or any other desired route
     this.router.navigate(['/login2']);
   }
 

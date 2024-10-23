@@ -30,9 +30,9 @@ export class NationalhomePage implements OnInit {
   newNotificationsCount: number = 3;
   searchQuery: string = '';
   showSearchBar: boolean = false;
-  filteredProgrammes: County[] = []; // To hold filtered counties
-  counties: County[] = []; // To hold counties with programmes
-  programmes: Programme[] = []; // Store loaded programmes
+  filteredProgrammes: County[] = [];
+  counties: County[] = []; 
+  programmes: Programme[] = []; 
   userType: any;
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   years: number[] = [2020, 2021, 2022, 2023, 2024];

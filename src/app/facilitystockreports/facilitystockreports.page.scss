@@ -1,47 +1,55 @@
 .status-div {
-    padding: 5px 10px; 
-    border-radius: 10px; 
-    display: inline-block; 
-    color: white; 
-  }
-  
-  .approved {
-    background-color: #4CAF50; 
-  }
-  
-  .pending {
-    background-color: #FFC107; 
-  }
-  
-  .not-reported {
-    background-color: #F44336; 
-  }
-  .heading-bold {
-    font-weight: bold;
-  }
-  .heading{
-    font-weight: bold;
-  }
-  .ion-text-end {
-    margin-bottom: 10px;
-  }
-  .date-col {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  
-  .date-selectors {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  
-  .date-selectors ion-select {
-    margin-right: 8px; 
-    color: black;
-  }
-  
-  .color{
-    color: black;
-  }
+  padding: 5px 10px;
+  border-radius: 10px;
+  display: inline-block;
+  color: white;
+}
+
+.approved {
+  background-color: #4CAF50;
+}
+
+.pending {
+  background-color: #FFC107;
+}
+
+.not-reported {
+  background-color: #F44336;
+}
+
+.heading-bold {
+  font-weight: bold;
+}
+
+.heading {
+  font-weight: bold;
+}
+
+.ion-text-end {
+  margin-bottom: 10px;
+}
+
+.date-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.date-selectors {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.date-selectors ion-select {
+  margin-right: 8px;
+  color: black;
+}
+
+.color {
+  color: black;
+}
+
+.color1 {
+  font-weight: 600;
+}

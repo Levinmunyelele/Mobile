@@ -135,4 +135,9 @@ export class InventoryService {
     return this.api.get(`inventory-lines/${inventoryId}/drug/${drugId}`);
   }
   
+
+  loadDrugName(drugId: number): Observable<any> {
+    return this.api.get(`drugs/${drugId}`);
+  }
+  
 }

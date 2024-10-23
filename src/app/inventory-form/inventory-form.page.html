@@ -25,67 +25,55 @@
     <ion-card-content>
       <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()" class="custom-form">
         
-        <!-- Beginning Balance -->
         <ion-item lines="none">
           <ion-label position="floating">Beginning Balance <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="beginningBalance" type="number"></ion-input>
         </ion-item>
 
-        <!-- Received -->
         <ion-item lines="none">
           <ion-label position="floating">Received <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="received" type="number"></ion-input>
         </ion-item>
 
-        <!-- Dispensed -->
         <ion-item lines="none">
           <ion-label position="floating">Dispensed <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="dispensed" type="number"></ion-input>
         </ion-item>
 
-        <!-- Losses -->
         <ion-item lines="none">
           <ion-label position="floating">Losses <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="losses" type="number"></ion-input>
         </ion-item>
 
-        <!-- Positive Adjustment -->
         <ion-item lines="none">
           <ion-label position="floating">Positive Adjustment <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="positiveAdjustment" type="number"></ion-input>
         </ion-item>
 
-        <!-- Negative Adjustment -->
         <ion-item lines="none">
           <ion-label position="floating">Negative Adjustment <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="negativeAdjustment" type="number"></ion-input>
         </ion-item>
 
-        <!-- Ending Balance -->
         <ion-item lines="none">
           <ion-label position="floating">Ending Balance <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="endingBalance" type="number" readonly="true"></ion-input>
         </ion-item>
 
-        <!-- Quantity Requested -->
         <ion-item lines="none">
           <ion-label position="floating">Quantity Requested <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="quantityRequested" type="number"></ion-input>
         </ion-item>
 
-        <!-- Days Out Of Stock -->
         <ion-item lines="none">
           <ion-label position="floating">Days Out Of Stock <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="daysOutOfStock" type="number"></ion-input>
         </ion-item>
 
-        <!-- Comments -->
         <ion-item lines="none">
           <ion-label position="floating">Comments</ion-label>
           <ion-textarea formControlName="comments" placeholder="Enter your comments here..."></ion-textarea>
         </ion-item>
-
-        <!-- Save Button -->
         <ion-button expand="block" type="submit" [disabled]="!reactiveForm.valid" class="save-button">SAVE</ion-button>
       </form>
     </ion-card-content>

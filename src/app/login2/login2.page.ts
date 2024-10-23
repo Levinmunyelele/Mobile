@@ -3,11 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { MaskitoOptions, MaskitoElementPredicate } from '@maskito/core';
-
-
-
-
-
 @Component({
   selector: 'app-login2',
   templateUrl: './login2.page.html',
@@ -21,10 +16,6 @@ export class Login2Page {
   hidePassword: boolean = true;
   changetype: boolean = true;
   rememberMe: boolean = false;
-
-
-
-
 
   constructor(private router: Router, private http: HttpClient, private loginService: LoginService) { }
 
@@ -59,7 +50,7 @@ export class Login2Page {
     }
   }
   login() {
-    const mobile = this.mobile.replace(/\D/g, ''); 
+    const mobile = this.mobile.replace(/\D/g, '');
 
     if (mobile.length !== 10) {
       this.errorMessage = 'Please enter a valid 10-digit mobile number.';
@@ -101,7 +92,6 @@ export class Login2Page {
       }
     });
   }
-
 
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;

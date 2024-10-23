@@ -56,10 +56,10 @@ export class ProfilePage implements OnInit {
       quality: 90,
       allowEditing: false,
       resultType: CameraResultType.Uri,
-      source: CameraSource.Camera // Or CameraSource.Photos for gallery
+      source: CameraSource.Camera 
     });
   
-    this.userImage = image.webPath; // Save the image path to a variable
+    this.userImage = image.webPath;
   }
   async checkPermissions() {
     const permissions = await Camera.checkPermissions();

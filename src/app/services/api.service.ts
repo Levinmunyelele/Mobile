@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  url = 'http://qualipharmapi.local/v1';
+  url = 'https://qualipharm-app.healthstrat.co.ke:4040/v1';
 
   constructor(public http: HttpClient) {}
 
