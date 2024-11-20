@@ -50,21 +50,31 @@ export class Login2Page {
     }
   }
   login() {
-    const mobile = this.mobile.replace(/\D/g, '');
+    this.errorMessage = '';
 
+    const mobile = this.mobile.replace(/\D/g, ''); 
+  
     if (mobile.length !== 10) {
       this.errorMessage = 'Please enter a valid 10-digit mobile number.';
       return;
     }
+  
     this.loginService.login({ mobile, password: this.password }).subscribe({
       next: (response: any) => {
-        if (response) {
+        console.log('Response received:', response);  
+  
+        if (response && response.token) {
           const { data, token } = response;
 
+          this.errorMessage = '';
+  
           sessionStorage.setItem('mobile', mobile);
           sessionStorage.setItem('token', token);
           sessionStorage.setItem('user', JSON.stringify(data));
 
+          this.mobile = ''; 
+          this.password = ''; 
+  
           switch (data.userType) {
             case 'National':
               this.router.navigate(['./national']);
@@ -82,16 +92,19 @@ export class Login2Page {
               this.router.navigate(['./dashboard']);
               break;
             default:
+              this.errorMessage = 'Unknown user type. Please try again.';
               break;
           }
         }
       },
       error: (error) => {
-        this.errorMessage = 'Incorrect mobile number or password. Please try again.';
-        console.error('Login error:', error);
+        console.error('Error received:', error);
+        this.errorMessage = error?.error?.message || 'Invalid Mobile or Password. Please try again later.';
       }
     });
   }
+   
+  
 
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;

@@ -7,9 +7,6 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="toggleSearchBar()">
-        <ion-icon name="search"></ion-icon>
-      </ion-button>
       <ion-button (click)="toggleMenu()">
         <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
       </ion-button>
@@ -34,10 +31,14 @@
       <ion-row class="name">{{ countyName }}</ion-row>
     </ion-card-header>
   </ion-card>
-  <ion-toolbar *ngIf="showSearchBar" color="light">
-    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterSubCounties()" placeholder="Search County"></ion-searchbar>
+
+  <!-- Search Bar (Always Visible) -->
+  <ion-toolbar color="light">
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterSubCounties()" placeholder="Search Subcounty"></ion-searchbar>
   </ion-toolbar>
-  <ng-container *ngFor="let subcounty of subcounties">
+
+  <!-- List Subcounties -->
+  <ng-container *ngFor="let subcounty of filteredSubCounties">
     <ion-card>
       <ion-card-header>
         <ion-card-title class="heading-bold">{{ subcounty.subCountyName }}</ion-card-title>
@@ -69,5 +70,4 @@
       </ion-card-content>
     </ion-card>
   </ng-container>
-
 </ion-content>

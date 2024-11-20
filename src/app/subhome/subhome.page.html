@@ -59,7 +59,7 @@
       <ion-list>
         <ion-item *ngFor="let programme of filteredProgrammes">
           <ion-label>
-            <h2>{{ programme.programmeName }}</h2>
+            <h2  (click)="navigateToInventoryForm(programme)">{{ programme.programmeName }}</h2>
             <ion-progress-bar [value]="programme.reportingRate"></ion-progress-bar>
             <p [ngClass]="getStatusColor(programme.reportingRate)"   (click)="navigateToInventoryForm(programme)">
               Reporting Rate: {{ programme.reportingRate | percent }}

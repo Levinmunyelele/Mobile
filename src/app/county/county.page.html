@@ -63,7 +63,7 @@
             {{ programme.programmeName }}
             <ion-progress-bar [value]="programme.reportingRate" [color]="getProgressBarColor(programme.reportingRate)">
             </ion-progress-bar>
-            <p [ngClass]="getStatusColor(programme.reportingRate)" class="reporting-rate-text">
+            <p [ngClass]="getStatusColor(programme.reportingRate)" class="reporting-rate-text" (click)="navigateToProgrammeSummary(programme, subcounty)">
               Reporting Rate: {{ programme.reportingRate | percent }}
             </p>
           </ion-label>

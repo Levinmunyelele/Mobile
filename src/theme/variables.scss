@@ -75,6 +75,15 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  ion-button.tiba {
+    --background: #1d434e; /* Set the button's background to tiba color */
+    --color: #ffffff; /* Set the text color to white */
+    --background-activated: #193a44; /* Optional: Slightly darker color when pressed */
+    --background-hover: #2b5560; /* Optional: Slightly lighter color when hovered */
+    --border-radius: 8px; /* Optional: Customize the button's border radius */
+  }
+  
 }
 
 // @media (prefers-color-scheme: dark) {

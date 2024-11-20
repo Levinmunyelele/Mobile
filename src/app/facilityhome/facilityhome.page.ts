@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { InventoryService } from '../services/inventory.service';
 import { MenuController } from '@ionic/angular';
 import { NotificationService, Notification } from './../services/notification.service'
+import { forkJoin } from 'rxjs';
+
 
 
 @Component({

@@ -29,7 +29,6 @@ export class NationalhomePage implements OnInit {
   selectedYear: number = 2020;
   newNotificationsCount: number = 3;
   searchQuery: string = '';
-  showSearchBar: boolean = false;
   filteredProgrammes: County[] = [];
   counties: County[] = []; 
   programmes: Programme[] = []; 
@@ -50,11 +49,8 @@ export class NationalhomePage implements OnInit {
 
   ngOnInit() {
     this.loadUserDetails();
-    this.loadNotifications();
-    this.loadCountiesAndProgrammes(); 
   }
 
-  
   loadUserDetails() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     console.log('Loaded user from sessionStorage:', user); 
@@ -65,21 +61,24 @@ export class NationalhomePage implements OnInit {
       console.warn('User or type information not found.');
     }
   }
-  
 
   loadCountiesAndProgrammes() {
-    this.inventoryService.getCounties().subscribe(
-      (countiesResponse: County[]) => {
-        this.counties = countiesResponse;
-        this.filteredCounties = [...this.counties]; 
-        this.loadProgrammes(); 
-      },
-      (error) => {
-        console.error('Error loading counties:', error);
-      }
-    );
+    if (this.searchQuery.trim()) {
+      this.inventoryService.getCounties().subscribe(
+        (countiesResponse: County[]) => {
+          this.counties = countiesResponse;
+          this.filteredCounties = this.counties.filter(county =>
+            county.countyName.toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+          this.loadProgrammes(); // Only load programmes if counties are found
+        },
+        (error) => {
+          console.error('Error loading counties:', error);
+        }
+      );
+    }
   }
-  
+
   loadProgrammes(): void {
     this.inventoryService.getProgrammes().subscribe(
       (data: Programme[]) => {
@@ -89,11 +88,10 @@ export class NationalhomePage implements OnInit {
           programmeId: program.programmeId,
         }));
 
-        this.counties.forEach(county => {
+        // Assign programmes to filtered counties
+        this.filteredCounties.forEach(county => {
           county.programmes = this.programmes;
         });
-
-        this.filteredProgrammes = this.counties; 
       },
       (error) => {
         console.error('Error fetching programmes:', error);
@@ -103,29 +101,10 @@ export class NationalhomePage implements OnInit {
 
   filterCounties() {
     if (this.searchQuery.trim()) {
-      this.filteredCounties = this.counties.filter(county =>
-        county.countyName.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      this.loadCountiesAndProgrammes();
     } else {
-      this.filteredCounties = [...this.counties]; 
+      this.filteredCounties = [];
     }
-    
-    console.log('Filtered Counties:', this.filteredCounties);
-  }
-  
-  toggleSearchBar() {
-    this.showSearchBar = !this.showSearchBar;
-  
-    if (!this.showSearchBar) {
-      this.searchQuery = '';
-      this.filteredCounties = [...this.counties]; 
-    }
-  }
-
-  loadNotifications(): void {
-    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.newNotificationsCount = notifications.filter(notification => notification.isNew).length;
-    });
   }
 
   toggleMenu() {

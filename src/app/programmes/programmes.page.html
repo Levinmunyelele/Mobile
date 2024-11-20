@@ -54,7 +54,7 @@
 
       <ion-list>
         <ion-item *ngFor="let facility of filteredFacilities || facilities">
-          <ion-label>
+          <ion-label  (click)="navigateToInventoryApproval({ programmeId: programmeId }, facility)">
             {{ facility.facilityName }}
           </ion-label>
           <ion-label slot="end">

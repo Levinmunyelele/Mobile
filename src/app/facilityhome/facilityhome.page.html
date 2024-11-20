@@ -49,7 +49,7 @@
 
       <ion-list>
         <ion-item *ngFor="let program of filterProgrammes.length > 0 ? filterProgrammes : programmes">
-          <ion-label ion-text-wrap>{{ program.programmeName }}</ion-label>
+          <ion-label ion-text-wrap (click)="navigateToInventoryForm(program)">{{ program.programmeName }}</ion-label>
           <ion-label slot="end">
             <div class="status-div" [ngClass]="getStatusColor(program.status)" (click)="navigateToInventoryForm(program)">
               {{ program.status }}

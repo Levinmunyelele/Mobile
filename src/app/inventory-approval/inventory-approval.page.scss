@@ -144,14 +144,19 @@
     }
     
     .table, .table th, .table td {
-      border: 1px solid black; /* Adds border for tables */
-      padding: 8px; /* Adds padding for table cells */
-      text-align: left; /* Aligns text to the left */
+      border: 1px solid black; 
+      padding: 8px; 
+      text-align: left; 
     }
   
     h3, h4 {
       margin: 0;
       padding: 5px 0;
+    }
+
+    ion-button.tiba {
+      --background: #1d434e;
+      --color: #ffffff;
     }
   }
   

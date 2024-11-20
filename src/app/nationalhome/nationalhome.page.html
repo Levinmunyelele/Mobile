@@ -2,9 +2,6 @@
   <ion-toolbar color="primary">
     <ion-title>Home</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="toggleSearchBar()">
-        <ion-icon name="search"></ion-icon>
-      </ion-button>
       <ion-button (click)="goToNotifications()">
         <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
         <span class="badge" *ngIf="newNotificationsCount > 0">{{ newNotificationsCount }}</span>
@@ -21,7 +18,7 @@
     <ion-card-header>
       <ion-row class="align-center">
         <ion-col size="6">
-          <ion-card-title>{{ userType}} </ion-card-title>
+          <ion-card-title>{{ userType }} </ion-card-title>
         </ion-col>
         <ion-col size="6" class="ion-text-end">
           <div class="date-selectors">
@@ -43,9 +40,13 @@
     </ion-card-header>
   </ion-card>
 
-  <ion-toolbar *ngIf="showSearchBar" color="light">
-    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterCounties()" placeholder="Search County"></ion-searchbar>
-  </ion-toolbar>
+  <!-- Search bar is directly included here -->
+  <ion-card>
+    <ion-card-header>
+      <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterCounties()" placeholder="Search County"></ion-searchbar>
+    </ion-card-header>
+  </ion-card>
+
   <ion-card *ngFor="let county of filteredCounties">  
     <ion-card-header>
       <ion-row>
@@ -59,7 +60,7 @@
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let programme of county.programmes">
-          <ion-label  (click)="navigateToProgrammeSummary(programme,county)">
+          <ion-label (click)="navigateToProgrammeSummary(programme, county)">
             {{ programme.programmeName }}
             <ion-progress-bar [value]="programme.reportingRate" [color]="getProgressBarColor(programme.reportingRate)">
             </ion-progress-bar>
@@ -71,3 +72,4 @@
       </ion-list>
     </ion-card-content>
   </ion-card>
+</ion-content>

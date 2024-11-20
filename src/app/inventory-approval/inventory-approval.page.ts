@@ -5,19 +5,21 @@ import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { InventoryService } from '../services/inventory.service';
 import { Subscription } from 'rxjs';
+import { AlertController } from '@ionic/angular';
+
 interface DrugDetails {
-  [key: string]: string; 
+  [key: string]: string;
 }
 
 @Component({
-selector: 'app-inventory-approval',
-templateUrl: './inventory-approval.page.html',
-styleUrls: ['./inventory-approval.page.scss'],
+  selector: 'app-inventory-approval',
+  templateUrl: './inventory-approval.page.html',
+  styleUrls: ['./inventory-approval.page.scss'],
 })
 export class InventoryApprovalPage implements OnInit, OnDestroy {
   programmeId!: number;
   drugs: any[] = [];
-  allDrugs: DrugDetails = {}; 
+  allDrugs: DrugDetails = {};
   displayDrugs: boolean = false;
   allDrugDetails: { [id: number]: any } = {};
   programmeName!: string;
@@ -45,11 +47,14 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
   showWarning: boolean | false = false;
   subCountyName: any;
   subCountyId: any;
+  isApproved: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private alertController: AlertController
+
   ) {
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -58,6 +63,29 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
     }
   }
 
+  async presentApprovalAlert() {
+    const alert = await this.alertController.create({
+      header: 'Are you sure?',
+      message: 'Do you really want to approve this inventory?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Approval cancelled');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.approveInventory();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
   ngOnInit() {
     this.loadFacilities();
     this.route.queryParams.subscribe(params => {
@@ -72,7 +100,7 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
       this.facilityId = +params['facilityId'];
       this.programmeId = +params['programmeId'];
       this.subCountyId = +params['subCountyId']
-      console.log('FacilityId:', this.facilityId, 'ProgrammeId:', this.programmeId); 
+      console.log('FacilityId:', this.facilityId, 'ProgrammeId:', this.programmeId);
     });
 
     this.inventoryDataSubscription = this.inventoryService.inventoryData$.subscribe((data: any[]) => {
@@ -81,7 +109,7 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
         return map;
       }, {} as { [drugId: number]: any });
     });
-    
+
   }
 
   ionViewWillEnter() {
@@ -92,30 +120,30 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
 
   printPage(): void {
     const buttons = document.querySelectorAll('.print-exclude');
-  
+
     buttons.forEach(button => {
       (button as HTMLElement).style.display = 'none';
     });
-  
+
     window.print();
-  
+
     buttons.forEach(button => {
       (button as HTMLElement).style.display = 'block';
     });
   }
-  
+
 
   loadFacilities() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    const userSubCountyId = user?.subCounty; 
-  
+    const userSubCountyId = user?.subCounty;
+
     console.log('User Subcounty ID:', userSubCountyId);
-  
+
     if (!userSubCountyId) {
       console.error('Subcounty ID is missing');
       return;
     }
-  
+
     this.inventoryService.getFacilities(userSubCountyId).subscribe(
       (facilities: any[]) => {
         console.log('Fetched facilities:', facilities);
@@ -126,7 +154,6 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
       }
     );
   }
-  
 
   matchFacilityId(subCounty: any[]) {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
@@ -141,13 +168,14 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
       console.warn('No matching facility found for:', this.subCountyName);
     }
   }
+
   loadProgrammeDrugs() {
     console.log(`Fetching drugs for programmeId: ${this.programmeId}`);
-  
+
     this.inventoryService.getProgrammeDrugs(this.programmeId).subscribe(
       (programmeDrugs: any[]) => {
         console.log('Programme drugs fetched:', programmeDrugs);
-  
+
         this.drugs = programmeDrugs
           .filter(programmeDrug => programmeDrug.programmeId === this.programmeId)
           .map(programmeDrug => ({
@@ -155,26 +183,26 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
             drugName: this.allDrugs[programmeDrug.drugId] || 'Unknown Drug',
             inventoryDetails: this.inventoryData[programmeDrug.drugId] || {}
           }));
-          this.drugs.forEach(element => {
-            console.log('ddddd',element.drugId)
-            this.inventoryService.getInventoryLineByDrugId('?drugId='+element.drugId).subscribe((res)=>{
-              console.log('levin',res)
-              if(res.length > 0){
-                element.inventory=res[res.length-1]
-              }else{
-                element.inventory={}
-              }
-            })
-          });
-          console.log('fdstrdstrd',this.drugs);
-  
+        this.drugs.forEach(element => {
+          console.log('ddddd', element.drugId)
+          this.inventoryService.getInventoryLineByDrugId('?drugId=' + element.drugId).subscribe((res) => {
+            console.log('levin', res)
+            if (res.length > 0) {
+              element.inventory = res[res.length - 1]
+            } else {
+              element.inventory = {}
+            }
+          })
+        });
+        console.log('fdstrdstrd', this.drugs);
+
         this.displayDrugs = true;
       },
       (error) => {
         console.error('Error fetching programme drugs:', error);
       }
     );
-  }   
+  }
 
   goToInventoryForm(inventoryId: number, drugId: number, programmeId: number) {
     this.router.navigate(['/programmes'], {
@@ -191,7 +219,7 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
       (drugs: any[]) => {
         console.log('All drugs fetched:', drugs);
         this.allDrugs = drugs.reduce((map, drug) => {
-          map[drug.drugId] = drug.drugName; 
+          map[drug.drugId] = drug.drugName;
           return map;
         }, {} as { [id: number]: string });
       },
@@ -200,9 +228,6 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
       }
     );
   }
-  
-  
- 
 
   loadProgrammeName() {
     console.log('Fetching programme details for programmeId:', this.programmeId);
@@ -230,18 +255,17 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
 
   approveInventory() {
     console.log('Approving inventory with facilityId:', this.facilityId, 'and programmeId:', this.programmeId);
-    
+
     if (this.facilityId && this.programmeId) {
       this.inventoryService.approveInventory(this.facilityId, this.programmeId).subscribe(
         response => {
           console.log('Inventory approved:', response);
-
+          this.isApproved = true; 
           this.router.navigate(['/programmes'], {
-            queryParams: { programmeId: this.programmeId,
-              programmeName: this.programmeName  
-              
-
-             }
+            queryParams: {
+              programmeId: this.programmeId,
+              programmeName: this.programmeName
+            }
           });
         },
         error => {
@@ -251,14 +275,13 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
     } else {
       console.error('Missing facilityId or programmeId');
     }
-}
-
+  }
 
   goBack() {
     this.router.navigate(['/programmes'], {
-      queryParams: { programmeId: this.programmeId , programmeName: this.programmeName }
+      queryParams: { programmeId: this.programmeId, programmeName: this.programmeName }
     });
-}
+  }
 
 
   ngOnDestroy() {
@@ -267,5 +290,4 @@ export class InventoryApprovalPage implements OnInit, OnDestroy {
     }
   }
 
-}  
- 
+}

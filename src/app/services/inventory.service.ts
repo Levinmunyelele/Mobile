@@ -23,21 +23,19 @@ export class InventoryService {
     return this.api.get('inventory', params).pipe(
       map(response => {
         if (response.status === "success") {
-          return response.data; 
+          return response.data;
         } else {
           throw new Error("Failed to fetch inventory data");
         }
       })
     );
   }
+
   approveInventory(facilityId: any, programmeId: any): Observable<any> {
     console.log('Calling approveInventory API with facilityId:', facilityId, 'and programmeId:', programmeId);
-  
-    const url = `inventory/approve-inventory?facilityId=${facilityId}&programmeId=${programmeId}`;  
-  
-    return this.api.put(url, null);  
-  }  
-  
+
+    return this.api.put(`inventory/approve-inventory?facilityId=${facilityId}&programmeId=${programmeId}`, null);
+  }
 
   getProgrammes() {
     return this.api.get('programmes');
@@ -50,25 +48,25 @@ export class InventoryService {
       map((response: { facilities: any[] }) => response.facilities)
     );
   }
-  
+
   getCategories() {
     return this.api.get('categories');
   }
   getAllDrugs() {
     return this.api.get('drugs');
   }
-  
+
   getProgrammeDrugs(programmeId: number): Observable<any[]> {
     const params = new HttpParams().set('programmeId', programmeId.toString());
     return this.api.get('programme-drugs', { params });
-  
+
   }
 
   getProgrammeDetails(programmeId: number): Observable<any> {
     const params = new HttpParams().set('programmeId', programmeId.toString());
     return this.api.get('programmes', { params });
   }
-  
+
   getFacilitiesBySubCounty(subCountyId: number): Observable<any> {
     console.log('Fetching facilities for subCountyId:', subCountyId);
     return this.api.get('facilities', { subCountyId });
@@ -107,11 +105,11 @@ export class InventoryService {
     return this.api.get(`inventory-lines/?inventoryId=${drugId}`);
   }
 
-  getInventoryLineByDrugId(text:any): Observable<any> {
-    return this.api.get(`inventory-lines/`+text);
+  getInventoryLineByDrugId(text: any): Observable<any> {
+    return this.api.get(`inventory-lines/` + text);
   }
 
-  createInventory(inventoryData: { facilityId: number; programmeId: number; year: number; month: string; inventoryStatusId: number; categoryId:number }): Observable<any> {
+  createInventory(inventoryData: { facilityId: number; programmeId: number; year: number; month: string; inventoryStatusId: number; categoryId: number }): Observable<any> {
     return this.api.post('inventory/create-inventory', inventoryData).pipe(
       tap(response => {
         console.log('Inventory created successfully:', response);
@@ -120,8 +118,8 @@ export class InventoryService {
   }
   updateInventory(inventoryId: number, inventoryData: any) {
     return this.api.put(`inventory/update-inventory?inventoryId=${inventoryId}`, inventoryData);
-  } 
-  
+  }
+
   getInventoryLines(drugId: number): Observable<any[]> {
     return this.api.get('inventory-lines', { params: { drugId } }).pipe(
       catchError(error => {
@@ -134,10 +132,10 @@ export class InventoryService {
   getInventoryData(inventoryId: string, drugId: string): Observable<any> {
     return this.api.get(`inventory-lines/${inventoryId}/drug/${drugId}`);
   }
-  
+
 
   loadDrugName(drugId: number): Observable<any> {
     return this.api.get(`drugs/${drugId}`);
   }
-  
+
 }
