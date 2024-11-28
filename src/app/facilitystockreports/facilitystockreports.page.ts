@@ -87,56 +87,73 @@ export class FacilitystockreportsPage implements OnInit {
         console.log('Programs received from service:', data);
         this.programmes = data.map((program: any) => ({
           ...program,
-          status: 'Not Reported'
+          status: program.status || 'Not Reported'  
         }));
-
+  
         this.inventoryService.getSubcounties().subscribe(
           (subCounties: any[]) => {
             const userSubCounty = subCounties.find(
               subCounty => subCounty.subCountyName.toLowerCase().trim() === userSubCountyName.toLowerCase().trim()
             );
-
+  
             if (!userSubCounty) {
               console.error(`Subcounty not found for user subcounty name: ${userSubCountyName}`);
               return;
             }
-
+  
             const userSubCountyId = userSubCounty.subCountyId;
             console.log('User Subcounty ID:', userSubCountyId);
-
+  
             this.inventoryService.getFacilities(userSubCountyId).subscribe(
               (facilities: any[]) => {
                 if (!facilities.length) {
                   console.error('No facilities found for this subcounty.');
                   return;
                 }
-
+  
                 const facility = facilities.find(
                   (facility: any) => facility.facilityName.toLowerCase().trim() === facilityName.toLowerCase().trim()
                 );
-
+  
                 if (!facility) {
                   console.error(`Facility ID not found for the facility name: ${facilityName}`);
                   return;
                 }
-
+  
                 const facilityId = facility.facilityId;
                 console.log('Facility ID:', facilityId);
-
+  
                 this.programmes.forEach((programme: any) => {
                   const programmeId = programme.programmeId;
-
+                  const previousStatus = programme.status;  
+  
                   this.inventoryService.getInventory({ programmeId, facilityId }).subscribe(
                     (inventoryData: any) => {
-                      if (inventoryData && inventoryData.inventoryStatusName) {
-                        programme.status = inventoryData.inventoryStatusName;
-                        console.log(`Updated status for ${programme.programmeName}: ${programme.status}`);
-                      } else {
-                        console.warn(`No inventory data found for programmeId: ${programmeId}`);
+                      let newStatus = inventoryData?.inventoryStatusName;
+  
+                      if (previousStatus === 'Approved') {
+                        console.log(`Status for ${programme.programmeName} remains 'Approved' and cannot be changed.`);
+                        programme.status = 'Approved';  
+                      }
+                      else if (previousStatus === 'Not Reported') {
+                        programme.status = 'Not Reported';  
+                        if (newStatus && newStatus !== 'Not Reported') {
+                          programme.status = newStatus;  
+                          console.log(`Updated status for ${programme.programmeName}: ${programme.status}`);
+                        }
+                      }
+                      else if (previousStatus === 'Pending Approval') {
+                        programme.status = 'Pending Approval';  
+                        if (newStatus && newStatus !== 'Pending Approval') {
+                          programme.status = newStatus;  
+                          console.log(`Updated status for ${programme.programmeName}: ${programme.status}`);
+                        }
                       }
                     },
                     (error) => {
                       console.error(`Error fetching inventory data for programmeId: ${programmeId}`, error);
+                      programme.status = previousStatus;
+                      console.log(`Error fetching inventory data for ${programme.programmeName}. Status reverted back to: ${programme.status}`);
                     }
                   );
                 });

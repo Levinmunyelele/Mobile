@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router'
+import { Router } from '@angular/router'
 import { HttpClient } from '@angular/common/http';
 import { InventoryService } from '../services/inventory.service';
 import { MenuController } from '@ionic/angular';
@@ -20,12 +20,12 @@ export class FacilityhomePage implements OnInit {
   programmes!: any[];
   currentDate!: Date;
   newNotificationsCount: number = 0;
-  searchStatus: string = '';  
-  filterProgrammes: any[] = []; 
+  searchStatus: string = '';
+  filterProgrammes: any[] = [];
   showSearchBar: boolean | undefined;
 
-  constructor(private router:Router, private http:HttpClient, private inventoryService: InventoryService , private menuController:MenuController,  private notificationService: NotificationService) { }
-  
+  constructor(private router: Router, private http: HttpClient, private inventoryService: InventoryService, private menuController: MenuController, private notificationService: NotificationService) { }
+
   ngOnInit() {
     this.currentDate = new Date();
     this.loadUserDetails();
@@ -37,19 +37,19 @@ export class FacilityhomePage implements OnInit {
   loadUserDetails() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     if (user && user.facility) {
-      this.facilityName = user.facility; 
+      this.facilityName = user.facility;
     } else {
       console.warn('User or facility information not found.');
     }
   }
-  
+
   loadProgrammes() {
     this.inventoryService.getProgrammes().subscribe(
       (data: any) => {
         console.log('Programs received from service:', data);
         this.programmes = data.map((program: any) => ({
           ...program,
-          status: 'Not Reported' 
+          status: 'Not Reported'
         }));
 
         this.updateProgrammesWithInventoryStatus();
@@ -84,7 +84,7 @@ export class FacilityhomePage implements OnInit {
         console.log('Programs received from service:', data);
         this.programmes = data.map((program: any) => ({
           ...program,
-          status: 'Not Reported' 
+          status: program.status || 'Not Reported'
         }));
 
         this.inventoryService.getSubcounties().subscribe(
@@ -123,11 +123,19 @@ export class FacilityhomePage implements OnInit {
                 this.programmes.forEach((programme: any) => {
                   const programmeId = programme.programmeId;
 
+                  const previousStatus = programme.status;
+
                   this.inventoryService.getInventory({ programmeId, facilityId }).subscribe(
                     (inventoryData: any) => {
                       if (inventoryData && inventoryData.inventoryStatusName) {
-                        programme.status = inventoryData.inventoryStatusName;
-                        console.log(`Updated status for ${programme.programmeName}: ${programme.status}`);
+                        const newStatus = inventoryData.inventoryStatusName;
+                        if (newStatus !== 'Reported') {
+                          programme.status = newStatus;
+                          console.log(`Updated status for ${programme.programmeName}: ${programme.status}`);
+                        } else {
+                          programme.status = previousStatus;
+                          console.log(`Status for ${programme.programmeName} remains unchanged: ${programme.status}`);
+                        }
                       } else {
                         console.warn(`No inventory data found for programmeId: ${programmeId}`);
                       }
@@ -173,7 +181,7 @@ export class FacilityhomePage implements OnInit {
       console.warn(`Programme with name ${programmeName} not found.`);
     }
   }
-    
+
   loadNotifications(): void {
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
       this.newNotificationsCount = notifications.filter(notification => notification.isNew).length;
@@ -189,12 +197,12 @@ export class FacilityhomePage implements OnInit {
       case 'Not Reported':
         return 'not-reported';
       default:
-        return ''; 
-        
+        return '';
+
     }
   }
   toggleMenu() {
-    this.menuController.toggle('menu'); 
+    this.menuController.toggle('menu');
   }
 
 
@@ -211,17 +219,18 @@ export class FacilityhomePage implements OnInit {
   toggleSearchBar() {
     this.showSearchBar = !this.showSearchBar;
     if (!this.showSearchBar) {
-      this.searchStatus = '';  
-      this.filterProgrammesByStatus(); 
+      this.searchStatus = '';
+      this.filterProgrammesByStatus();
     }
   }
 
   goToNotifications(): void {
-    this.router.navigate(['/notification']); 
+    this.router.navigate(['/notification']);
   }
 
   navigateToInventoryForm(programme: any) {
     console.log(`Navigating to inventory page with programmeId: ${programme.programmeId}`);
+    localStorage.setItem(`programme-${programme.programmeId}-status`, programme.status);
     this.router.navigate(['/inventory-item'], { queryParams: { programmeId: programme.programmeId } });
   }
 }

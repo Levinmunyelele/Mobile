@@ -10,6 +10,7 @@ import { MessageTemplateService } from './../services/message-template.service';
 interface Programme {
   programmeName: string;
   reportingRate: number;
+  programmeId: number;
 }
 @Component({
   selector: 'app-subhome',
@@ -23,8 +24,10 @@ export class SubhomePage implements OnInit {
   searchQuery: string = '';
   showSearchBar: boolean = false;
   filteredProgrammes: Programme[] = [];
-  subcounty: string = '';
+  subcounty: string = '';  // This will store the subcounty value
+  subcountyId: number = 0;  // This will store the subcountyId (if available)
   programmes: Programme[] = [];
+  facilities: any[] = []; // Array to store all facilities for the subcounty
 
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   years: number[] = [2020, 2021, 2022, 2023, 2024];
@@ -43,6 +46,7 @@ export class SubhomePage implements OnInit {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     if (user && user.subCounty) {
       this.subcounty = user.subCounty;
+      this.subcountyId = user.subCountyId;  // Ensure to set the subCountyId from the user data
     } else {
       console.warn('User or subcounty information not found.');
     }
@@ -81,6 +85,7 @@ export class SubhomePage implements OnInit {
   goToNotifications(): void {
     this.router.navigate(['/notification']);
   }
+
   getStatusColor(reportingRate: number): string {
     if (reportingRate >= 0.8) {
       return 'success';
@@ -117,4 +122,40 @@ export class SubhomePage implements OnInit {
     });
   }
 
+  loadFacilities(programmeId: number, year: number, month: number) {
+    if (this.subcountyId !== undefined) {
+      this.inventoryService.getFacilitiesBySubCounty(this.subcountyId).subscribe(
+        (response: any) => {
+          if (response && response.facilities && Array.isArray(response.facilities)) {
+            this.facilities = response.facilities;
+
+            this.inventoryService.getFacilitiesByProgramAndPeriod(programmeId, year, month).subscribe(
+              (reportingFacilities: any[]) => {
+                const reportedFacilities = this.facilities.filter((facility: any) =>
+                  reportingFacilities.some((reportedFacility: any) => reportedFacility.facilityId === facility.facilityId)
+                );
+
+                console.log('Facilities that have reported:', reportedFacilities);
+
+                const reportingRate = (reportedFacilities.length / this.facilities.length) * 100;
+
+                const programme = this.programmes.find(p => p.programmeId === programmeId);
+                if (programme) {
+                  programme.reportingRate = reportingRate;
+                }
+
+                console.log(`Reporting Rate for programme ${programmeId}: ${reportingRate}%`);
+              },
+              error => {
+                console.error('Error fetching reporting facilities for the program and period:', error);
+              }
+            );
+          }
+        },
+        error => {
+          console.error('Error fetching facilities for subcounty:', error);
+        }
+      );
+    }
+  }
 }

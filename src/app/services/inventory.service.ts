@@ -116,6 +116,7 @@ export class InventoryService {
       })
     );
   }
+
   updateInventory(inventoryId: number, inventoryData: any) {
     return this.api.put(`inventory/update-inventory?inventoryId=${inventoryId}`, inventoryData);
   }
@@ -137,5 +138,16 @@ export class InventoryService {
   loadDrugName(drugId: number): Observable<any> {
     return this.api.get(`drugs/${drugId}`);
   }
+  getFacilitiesByProgramAndPeriod(programmeId: number, year: number, month: number): Observable<any[]> {
+    const params = new HttpParams()
+      .set('programmeId', programmeId.toString())
+      .set('year', year.toString())
+      .set('month', month.toString());
+
+    return this.api.get('inventory/filter-by-program-and-period', { params }).pipe(
+      map((response: { facilities: any[] }) => response.facilities)
+    );
+  }
+
 
 }

@@ -29,7 +29,7 @@
             <ion-card-title>{{ facilityName }}</ion-card-title>
           </ion-col>
           <ion-col class="ion-text-end date-col">
-            <ion-card-title>{{ currentDate | date: 'MMMM-yyyy' }}</ion-card-title>
+            <ion-card-title>{{ displayDate }}</ion-card-title> 
           </ion-col>
         </ion-row>
       </ion-card-header>
@@ -54,8 +54,9 @@
         <ion-row>
           <ion-col size="6">
             <ion-select [(ngModel)]="selectedMonth" placeholder="Reporting Month"
-              [ngClass]="{'warning': !selectedMonth && showWarning}">
-              <ion-select-option *ngFor="let month of months" [value]="month.value">
+              [ngClass]="{'warning': !selectedMonth && showWarning}" [disabled]="!selectedYear">
+              <ion-select-option *ngFor="let month of months" [value]="month.value"
+                [disabled]="isMonthDisabled(month.value)">
                 {{ month.name }}
               </ion-select-option>
             </ion-select>
@@ -63,7 +64,7 @@
           <ion-col size="6">
             <ion-select [(ngModel)]="selectedYear" placeholder="Reporting Year"
               [ngClass]="{'warning': !selectedYear && showWarning}">
-              <ion-select-option *ngFor="let year of years" [value]="year">
+              <ion-select-option *ngFor="let year of years" [value]="year" [disabled]="isYearDisabled(year)">
                 {{ year }}
               </ion-select-option>
             </ion-select>
@@ -71,9 +72,10 @@
         </ion-row>
         <ion-row *ngIf="!selectedMonth || !selectedYear">
           <ion-col>
-            <p class="warning-text">Please select both the reporting month and year to proceed.</p>
+            <p class="warning-text">Please select the reporting period to proceed.</p>
           </ion-col>
         </ion-row>
+
       </ion-card-header>
     </ion-card>
   </div>

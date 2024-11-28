@@ -18,15 +18,12 @@ export class InventoryFormPage implements OnInit {
   programmeId: number | null = null;
   inventoryId: number | null = null;
   loading: any;
-
-
   constructor(
     private router: Router,
     private httpclient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private inventoryService: InventoryService,
-    private loadingController: LoadingController,
-
+    private loadingController: LoadingController
   ) {
     this.reactiveForm = new FormGroup({
       beginningBalance: new FormControl(null, [Validators.required]),
@@ -38,13 +35,14 @@ export class InventoryFormPage implements OnInit {
       endingBalance: new FormControl({ value: null, disabled: false }),
       quantityRequested: new FormControl(null, [Validators.required]),
       daysOutOfStock: new FormControl(null, [Validators.required]),
-      comments: new FormControl(''),
+      comments: new FormControl('')
     });
 
     this.reactiveForm.valueChanges.subscribe(() => {
       this.calculateEndingBalance();
     });
   }
+
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -81,7 +79,13 @@ export class InventoryFormPage implements OnInit {
     this.inventoryService.getInventoryLineByDrugId('?drugId=' + drugId).subscribe(
       data => {
         if (data.length > 0) {
-          this.reactiveForm.patchValue(data[data.length - 1]);
+          const inventoryLine = data[data.length - 1];
+
+          const { endingBalance, ...inventoryDataWithoutEndingBalance } = inventoryLine;
+
+          console.log('Loaded data:', inventoryDataWithoutEndingBalance);
+
+          this.reactiveForm.patchValue(inventoryDataWithoutEndingBalance);
         }
       },
       error => {
@@ -91,24 +95,46 @@ export class InventoryFormPage implements OnInit {
   }
 
   calculateEndingBalance() {
-    const beginningBalance = this.reactiveForm.get('beginningBalance')?.value || 0;
-    const received = this.reactiveForm.get('received')?.value || 0;
-    const dispensed = this.reactiveForm.get('dispensed')?.value || 0;
-    const losses = this.reactiveForm.get('losses')?.value || 0;
-    const positiveAdjustment = this.reactiveForm.get('positiveAdjustment')?.value || 0;
-    const negativeAdjustment = this.reactiveForm.get('negativeAdjustment')?.value || 0;
+    const beginningBalance = parseFloat(this.reactiveForm.get('beginningBalance')?.value || '0');
+    const received = parseFloat(this.reactiveForm.get('received')?.value || '0');
+    const dispensed = parseFloat(this.reactiveForm.get('dispensed')?.value || '0');
+    const losses = parseFloat(this.reactiveForm.get('losses')?.value || '0');
+    const positiveAdjustment = parseFloat(this.reactiveForm.get('positiveAdjustment')?.value || '0');
+    const negativeAdjustment = parseFloat(this.reactiveForm.get('negativeAdjustment')?.value || '0');
 
-    const endingBalance = beginningBalance + received - dispensed - losses + positiveAdjustment - negativeAdjustment;
+    const availableStock = beginningBalance + received + positiveAdjustment - negativeAdjustment - dispensed - losses;
+
+    this.reactiveForm.get('dispensed')?.setErrors(null);
+    this.reactiveForm.get('losses')?.setErrors(null);
+    this.reactiveForm.get('negativeAdjustment')?.setErrors(null);
+
+    if (dispensed > availableStock) {
+      this.reactiveForm.get('dispensed')?.setErrors({ exceedsEndingBalance: true });
+    }
+
+    if (losses > availableStock) {
+      this.reactiveForm.get('losses')?.setErrors({ exceedsEndingBalance: true });
+    }
+
+    if (negativeAdjustment > availableStock) {
+      this.reactiveForm.get('negativeAdjustment')?.setErrors({ exceedsEndingBalance: true });
+    }
+
+    let endingBalance = beginningBalance + received - dispensed - losses + positiveAdjustment - negativeAdjustment;
+
+    if (endingBalance < 0) {
+      this.reactiveForm.get('endingBalance')?.setErrors({ negativeBalance: true });
+      endingBalance = 0;
+    } else {
+      this.reactiveForm.get('endingBalance')?.setErrors(null);
+    }
+
     this.reactiveForm.get('endingBalance')?.setValue(endingBalance, { emitEvent: false });
   }
 
+
   async onSubmit() {
     const formValue = this.reactiveForm.getRawValue();
-
-    if (!this.inventoryId) {
-      console.error('Inventory ID is not set');
-      return;
-    }
 
     const updatedInventoryData = {
       inventoryId: this.inventoryId,
@@ -121,15 +147,15 @@ export class InventoryFormPage implements OnInit {
       negativeAdjustment: formValue.negativeAdjustment,
       endingBalance: formValue.endingBalance,
       quantityRequested: formValue.quantityRequested,
-      quantityToOrder: 0,
-      quantityIssued: 0,
-      averageMonthlyConsumption: 0,
+      quantityToOrder: formValue.quantityToOrder,
+      quantityIssued: formValue.quantityIssued,
+      averageMonthlyConsumption: formValue.averageMonthlyConsumption,
       computedEndingBalance: formValue.endingBalance,
-      monthsOfStock: 0,
+      monthsOfStock: formValue.monthsOfStock,
       daysOutOfStock: formValue.daysOutOfStock,
-      adjustedConsumption: 0,
-      receivedFromSubCounty: 0,
-      notes: formValue.comments
+      adjustedConsumption: formValue.adjustedConsumption,
+      receivedFromSubCounty: formValue.receivedFromSubCounty,
+      notes: formValue.notes,
     };
 
     console.log('Submitting inventory data:', updatedInventoryData);
@@ -161,6 +187,7 @@ export class InventoryFormPage implements OnInit {
       }
     );
   }
+
 
   goBack() {
     this.router.navigate(['/inventory-item'], {

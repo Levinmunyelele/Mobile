@@ -15,16 +15,16 @@
       <h3 class="drug-name">{{ drugName }}</h3>
     </ion-card-content>
   </ion-card>
-  
+
   <p class="form-instructions">
-    Please enter your details below. 
+    Please enter your details below.
     <span class="mandatory-asterisk">*</span>Marked items are mandatory
   </p>
 
   <ion-card>
     <ion-card-content>
       <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()" class="custom-form">
-        
+
         <ion-item lines="none">
           <ion-label position="floating">Beginning Balance <span class="mandatory">*</span></ion-label>
           <ion-input formControlName="beginningBalance" type="number"></ion-input>
@@ -36,13 +36,19 @@
         </ion-item>
 
         <ion-item lines="none">
-          <ion-label position="floating">Dispensed <span class="mandatory">*</span></ion-label>
-          <ion-input formControlName="dispensed" type="number"></ion-input>
+          <ion-label position="floating">Dispensed *</ion-label>
+          <ion-input formControlName="dispensed" type="number" (ionInput)="calculateEndingBalance()"></ion-input>
+          <ion-text color="danger" *ngIf="reactiveForm.get('dispensed')?.hasError('exceedsEndingBalance')">
+            You cannot dispense more than the available stock.
+          </ion-text>
         </ion-item>
 
         <ion-item lines="none">
-          <ion-label position="floating">Losses <span class="mandatory">*</span></ion-label>
-          <ion-input formControlName="losses" type="number"></ion-input>
+          <ion-label position="floating">Losses *</ion-label>
+          <ion-input formControlName="losses" type="number" (ionInput)="calculateEndingBalance()"></ion-input>
+          <ion-text color="danger" *ngIf="reactiveForm.get('losses')?.hasError('exceedsEndingBalance')">
+            You cannot lose more than the available stock.
+          </ion-text>
         </ion-item>
 
         <ion-item lines="none">
@@ -51,14 +57,23 @@
         </ion-item>
 
         <ion-item lines="none">
-          <ion-label position="floating">Negative Adjustment <span class="mandatory">*</span></ion-label>
-          <ion-input formControlName="negativeAdjustment" type="number"></ion-input>
+          <ion-label position="floating">Negative Adjustment *</ion-label>
+          <ion-input formControlName="negativeAdjustment" type="number"
+            (ionInput)="calculateEndingBalance()"></ion-input>
+          <ion-text color="danger" *ngIf="reactiveForm.get('negativeAdjustment')?.hasError('exceedsEndingBalance')">
+            You cannot adjust negatively more than the available stock.
+          </ion-text>
         </ion-item>
 
         <ion-item lines="none">
           <ion-label position="floating">Ending Balance <span class="mandatory">*</span></ion-label>
-          <ion-input formControlName="endingBalance" type="number" readonly="true"></ion-input>
+          <ion-input formControlName="endingBalance" type="number"
+            [class.invalid]="reactiveForm.get('endingBalance')?.hasError('negativeBalance')"
+            readonly="true"></ion-input>
         </ion-item>
+        <ion-text *ngIf="reactiveForm.get('endingBalance')?.hasError('negativeBalance')" color="danger">
+          <p>Ending balance cannot be negative.</p>
+        </ion-text>
 
         <ion-item lines="none">
           <ion-label position="floating">Quantity Requested <span class="mandatory">*</span></ion-label>
@@ -74,6 +89,7 @@
           <ion-label position="floating">Comments</ion-label>
           <ion-textarea formControlName="comments" placeholder="Enter your comments here..."></ion-textarea>
         </ion-item>
+
         <ion-button expand="block" type="submit" [disabled]="!reactiveForm.valid" class="save-button">SAVE</ion-button>
       </form>
     </ion-card-content>
