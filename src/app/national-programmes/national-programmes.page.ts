@@ -24,6 +24,8 @@ export class NationalProgrammesPage implements OnInit {
   subcounties: any;
   subcountyId: undefined;
   filteredSubCounties: any[] = [];
+  selectedSubcounty: any;
+  
 
   constructor(
     private router: Router,
@@ -63,7 +65,9 @@ export class NationalProgrammesPage implements OnInit {
     this.loadNotifications();
     this.loadFacilities();
     this.loadInventoryStatuses(this.facilities);
-    this.loadSubCounties();
+    if (!this.selectedSubcounty) {
+      this.loadSubCounties();  
+    }
   }
   
   loadSubCounties() {
@@ -76,7 +80,10 @@ export class NationalProgrammesPage implements OnInit {
           console.warn('No subcounties found for the given countyId:', this.countyId);
         } else {
           console.log('Filtered Subcounties:', this.subcounties);
-          this.loadFacilities();
+          this.filteredSubCounties = this.subcounties;
+
+          this.selectedSubcounty = this.subcounties[0];
+          this.loadFacilities(); 
         }
       },
       (error) => {
@@ -85,39 +92,40 @@ export class NationalProgrammesPage implements OnInit {
     );
   }
 
+
   loadFacilities() {
-    if (this.subcounties && this.subcounties.length > 0) {
-      this.subcounties.forEach((subcounty: { subCountyId: any; facilities: any; }) => {
-        const subcountyId = subcounty.subCountyId;
+    if (this.selectedSubcounty && this.selectedSubcounty.subCountyId) {
+      this.inventoryService.getFacilitiesBySubCounty(this.selectedSubcounty.subCountyId).subscribe(
+        (response: any) => {
+          if (response && response.facilities && Array.isArray(response.facilities)) {
+            const allFacilities = response.facilities.map((facility: any) => {
+              return {
+                ...facility,
+                status: facility.status || 'Not Reported'  
+              };
+            });
   
-        this.inventoryService.getFacilitiesBySubCounty(subcountyId).subscribe(
-          (response: any) => {
-            if (response && response.facilities && Array.isArray(response.facilities)) {
-              const last20Facilities = response.facilities.slice(-5).map((facility: any) => {
-                return {
-                  ...facility,
-                  status: 'Not Reported' 
-                };
-              });
-  
-              subcounty.facilities = last20Facilities;
-              console.log(`Facilities loaded for subcounty ${subcounty.subCountyId}:`, subcounty.facilities);
-  
-              this.loadInventoryStatuses(subcounty.facilities); 
-            } else {
-              console.error(`Unexpected data format for subcounty ${subcountyId}:`, response);
-            }
-          },
-          (error) => {
-            console.error(`Error fetching facilities for subcounty ${subcountyId}:`, error);
+            this.selectedSubcounty.facilities = allFacilities;
+            console.log(`All facilities loaded for subcounty ${this.selectedSubcounty.subCountyId}:`, this.selectedSubcounty.facilities);
+          } else {
+            console.error(`Unexpected data format for subcounty ${this.selectedSubcounty.subCountyId}:`, response);
           }
-        );
-      });
+        },
+        (error) => {
+          console.error(`Error fetching facilities for subcounty ${this.selectedSubcounty.subCountyId}:`, error);
+        }
+      );
     } else {
-      console.warn('No subcounties available to load facilities.');
+      console.warn('No subcounty selected or invalid subcountyId.');
     }
   }
   
+  onSubcountyChange() {
+    console.log('Selected subcounty:', this.selectedSubcounty);
+    if (this.selectedSubcounty) {
+      this.loadFacilities();  
+    }
+  }
   
   loadInventoryStatuses(facilities: any[]) {
     facilities.forEach((facility) => {

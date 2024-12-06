@@ -11,30 +11,21 @@ export class ApiService {
   constructor(public http: HttpClient) {}
 
   get(endpoint: string, params?: any, reqOpts?: any): Observable<any> {
-    // Create reqOpts if it does not exist
     if (!reqOpts) {
-      reqOpts = {
-        params: new HttpParams()
-      };
+      reqOpts = { params: new HttpParams() };
     }
-
-    // Support easy query params for GET requests
+  
     if (params) {
-      reqOpts.params = new HttpParams();
-      for (const k in params) {
-        if (params.hasOwnProperty(k)) {
-          reqOpts.params = reqOpts.params.set(k, params[k]);
-        }
-      }
+      Object.keys(params).forEach(key => {
+        reqOpts.params = reqOpts.params.set(key, params[key]);
+      });
     }
-
-    // Uncomment and implement authorization headers if needed
-    // const token = this.getToken();
-    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    // reqOpts.headers = headers;
-
+  
+    // Make the GET request
     return this.http.get(this.url + '/' + endpoint, reqOpts);
   }
+  
+  
 
   post(endpoint: string, body: any, reqOpts?: any): Observable<any> {
     return this.http.post(this.url + '/' + endpoint, body);

@@ -8,6 +8,9 @@ import { HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class InventoryService {
+  getProgrammesWithRates(selectedMonthIndex: number, selectedYear: number) {
+    throw new Error('Method not implemented.');
+  }
 
   private subCountyMapping: { [key: string]: number } = {};
   private inventoryDataSubject = new BehaviorSubject<any[]>([]);
@@ -32,8 +35,6 @@ export class InventoryService {
   }
 
   approveInventory(facilityId: any, programmeId: any): Observable<any> {
-    console.log('Calling approveInventory API with facilityId:', facilityId, 'and programmeId:', programmeId);
-
     return this.api.put(`inventory/approve-inventory?facilityId=${facilityId}&programmeId=${programmeId}`, null);
   }
 
@@ -77,7 +78,6 @@ export class InventoryService {
   }
 
   getSubcounties(): Observable<any> {
-    console.log('Fetching subcounties data...');
     return this.api.get('sub-counties').pipe(
       tap((response: any[]) => {
         if (Array.isArray(response)) {
@@ -138,16 +138,35 @@ export class InventoryService {
   loadDrugName(drugId: number): Observable<any> {
     return this.api.get(`drugs/${drugId}`);
   }
-  getFacilitiesByProgramAndPeriod(programmeId: number, year: number, month: number): Observable<any[]> {
-    const params = new HttpParams()
-      .set('programmeId', programmeId.toString())
-      .set('year', year.toString())
-      .set('month', month.toString());
 
-    return this.api.get('inventory/filter-by-program-and-period', { params }).pipe(
-      map((response: { facilities: any[] }) => response.facilities)
+  fetchReportingRate(subCountyId: number, programmeId: number, year: number, month: number): Observable<number> {
+    return this.api.get('inventory/reports-percentage-by-sub-county', {
+      subCountyId,
+      programmeId,
+      year,
+      month
+    }).pipe(
+      map(response => response.percentageReported || 0),
+      catchError(error => {
+        console.error('Error fetching reporting rate:', error);
+        return throwError(error);
+      })
     );
   }
 
-
+  getReportingRate(countyId: number, programmeId: number, year: number, month: number): Observable<number> {
+    return this.api.get('inventory/reports-percentage-by-county', {
+      countyId,
+      programmeId,
+      year,
+      month
+    }).pipe(
+      map(response => response.percentageReported || 0),
+      catchError(error => {
+        console.error('Error fetching reporting rate:', error);
+        return throwError(error);
+      })
+    );
+  }
 }
+

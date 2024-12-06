@@ -32,16 +32,20 @@
     </ion-card-header>
   </ion-card>
 
-  <!-- Search Bar (Always Visible) -->
-  <ion-toolbar color="light">
-    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filterSubCounties()" placeholder="Search Subcounty"></ion-searchbar>
-  </ion-toolbar>
+  <ion-card><ion-toolbar color="light">
+      <ion-select [(ngModel)]="selectedSubcounty" (ionChange)="onSubcountyChange()" placeholder="Select Subcounty">
+        <ion-select-option *ngFor="let subcounty of filteredSubCounties" [value]="subcounty">
+          {{ subcounty.subCountyName }}
+        </ion-select-option>
+      </ion-select>
+    </ion-toolbar>
+  </ion-card>
 
-  <!-- List Subcounties -->
-  <ng-container *ngFor="let subcounty of filteredSubCounties">
+  <!-- List Subcounties and their Facilities -->
+  <ng-container *ngIf="selectedSubcounty">
     <ion-card>
       <ion-card-header>
-        <ion-card-title class="heading-bold">{{ subcounty.subCountyName }}</ion-card-title>
+        <ion-card-title class="heading-bold">{{ selectedSubcounty.subCountyName }}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-row>
@@ -53,20 +57,21 @@
           </ion-col>
         </ion-row>
         <ion-list>
-          <ng-container *ngFor="let facility of subcounty.facilities">
+          <ng-container *ngFor="let facility of selectedSubcounty.facilities">
             <ion-item>
               <ion-label>
                 {{ facility.facilityName }}
               </ion-label>
               <ion-label slot="end">
                 <div class="status-div" [ngClass]="getStatusColor(facility.status)"
-                (click)="navigateToInventorySummary(programmeId, facility, subcounty.subCountyName, subcounty.subCountyId,countyId, countyName)">
-                {{ facility.status }}
+                  (click)="navigateToInventorySummary(programmeId, facility, selectedSubcounty.subCountyName, selectedSubcounty.subCountyId, countyId, countyName)">
+                  {{ facility.status }}
                 </div>
               </ion-label>
             </ion-item>
           </ng-container>
         </ion-list>
+        
       </ion-card-content>
     </ion-card>
   </ng-container>

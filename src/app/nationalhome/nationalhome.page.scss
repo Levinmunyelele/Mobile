@@ -39,7 +39,6 @@
 /* Set smaller styles for the progress bar and text */
 ion-progress-bar {
   --background: #f0f0f0;
-  --progress-background: #007bff; /* Default color for progress bar */
   height: 8px;  /* Smaller height */
   border-radius: 4px;
   margin-bottom: 8px;  /* Adjust the spacing */
@@ -81,5 +80,4 @@ h3 {
   font-weight: 600;
   margin-bottom: 3px;
 }
-
 

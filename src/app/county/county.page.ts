@@ -10,6 +10,8 @@ import { MessageTemplateService } from './../services/message-template.service';
 interface Programme {
   programmeName: string;
   reportingRate: number;
+  programmeId: number;
+
 }
 @Component({
   selector: 'app-county',
@@ -17,8 +19,8 @@ interface Programme {
   styleUrls: ['./county.page.scss'],
 })
 export class CountyPage implements OnInit {
-  selectedMonth: string = 'July';
-  selectedYear: number = 2020;
+  selectedMonth: string = '';
+  selectedYear: number = 0;
   newNotificationsCount: number = 3;
   searchQuery: string = '';
   showSearchBar: boolean = false;
@@ -28,12 +30,13 @@ export class CountyPage implements OnInit {
   subcounties: any[] = [];
   userCountyId: number | null = null;
   filteredSubcounties: any[] = [];
-
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   years: number[] = [2020, 2021, 2022, 2023, 2024];
   counties: any[] | undefined;
   userCounty: any;
   searchStatus: string='';
+  selectedSubcounty: number | null = null; 
+
 
   constructor(
     private router: Router,
@@ -51,7 +54,25 @@ export class CountyPage implements OnInit {
     this.loadProgrammes();
     this.loadCounties();
     this.loadSubcounties();
+    this.initializeDefaults();
   }
+
+  onDateChange(): void {
+    if (!this.selectedMonth || !this.selectedYear) {
+      console.error("Both month and year must be selected to fetch data.");
+      return;
+    }
+    this.filterSubcountiesByCounty();
+  }
+  
+  
+  initializeDefaults() {
+    const currentDate = new Date();
+    const previousMonthIndex = currentDate.getMonth() - 1;
+    this.selectedMonth = this.months[previousMonthIndex < 0 ? 11 : previousMonthIndex];
+    this.selectedYear = previousMonthIndex < 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
+  }
+
 
   loadUserDetails() {
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
@@ -101,20 +122,49 @@ export class CountyPage implements OnInit {
   }
 
 
-  filterSubcountiesByCounty() {
+  async filterSubcountiesByCounty() {
     if (this.userCountyId) {
-      this.filteredSubcounties = this.subcounties
-        .filter(subcounty => subcounty.countyId === this.userCountyId)
-        .map(subcounty => ({
+      this.filteredSubcounties = []; // Clear the filtered list before processing
+  
+      for (const subcounty of this.subcounties.filter(s => s.countyId === this.userCountyId)) {
+        const programmesWithRates = await this.calculateRatesForSubcounty(subcounty);
+        this.filteredSubcounties.push({
           ...subcounty,
-          programmes: this.programmes
-        }));
-
-      console.log('Filtered Subcounties with Programmes:', this.filteredSubcounties);
+          programmes: programmesWithRates
+        });
+      }
     }
   }
-
-
+  
+  calculateRatesForSubcounty(subcounty: any): Promise<any[]> {
+    const programmesWithRates = this.programmes.map(programme => ({
+      ...programme,
+      reportingRate: 0 // Initialize default reporting rate
+    }));
+  
+    const ratePromises = programmesWithRates.map(programme =>
+      new Promise<any>((resolve) => {
+        this.inventoryService.fetchReportingRate(
+          subcounty.subCountyId,
+          programme.programmeId,
+          this.selectedYear,
+          this.months.indexOf(this.selectedMonth) + 1
+        ).subscribe({
+          next: (reportingRate) => {
+            programme.reportingRate = reportingRate;
+            resolve(programme); // Resolve when reporting rate is fetched
+          },
+          error: (error) => {
+            console.error(`Error fetching reporting rate for Programme ${programme.programmeId}`, error);
+            programme.reportingRate = 0; // Set to 0 on error
+            resolve(programme);
+          }
+        });
+      })
+    );
+    return Promise.all(ratePromises);
+  }  
+  
 
   loadNotifications(): void {
     this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
@@ -151,33 +201,23 @@ export class CountyPage implements OnInit {
     this.router.navigate(['/notification']);
   }
 
-  getProgressBarColor(rate: number): string {
-    if (rate < 0.5) {
-      return 'danger'; 
-    } else if (rate < 0.75) {
-      return 'warning'; 
+
+  getStatusColor(reportingRate: number): string {
+    if (reportingRate >= 50) {
+      return 'success';
+    } else if (reportingRate > 0 && reportingRate < 20) {
+      return 'warning';
     } else {
-      return 'success'; 
+      return 'danger';
     }
   }
-
-  getStatusColor(rate: number): string {
-    if (rate < 0.5) {
-      return 'low-rate';
-    } else if (rate < 0.75) {
-      return 'medium-rate';
-    } else {
-      return 'high-rate';
-    }
-  }
-
 
   loadProgrammes(): void {
     this.inventoryService.getProgrammes().subscribe(
       (data: Programme[]) => {
         this.programmes = data.map((program: any) => ({
           programmeName: program.programmeName,
-          reportingRate: 0.9,
+          reportingRate: 0,
           programmeId: program.programmeId,
         }));
         this.filteredProgrammes = this.programmes;

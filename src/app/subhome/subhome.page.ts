@@ -6,28 +6,31 @@ import { LogoutService } from '../services/logout.service';
 import { MenuController } from '@ionic/angular';
 import { NotificationService, Notification } from './../services/notification.service';
 import { MessageTemplateService } from './../services/message-template.service';
+import { EMPTY, forkJoin } from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
 
 interface Programme {
   programmeName: string;
   reportingRate: number;
   programmeId: number;
 }
+
 @Component({
   selector: 'app-subhome',
   templateUrl: './subhome.page.html',
   styleUrls: ['./subhome.page.scss'],
 })
 export class SubhomePage implements OnInit {
-  selectedMonth: string = 'July';
-  selectedYear: number = 2020;
+  selectedMonth: string = '';
+  selectedYear: number = 0;
   newNotificationsCount: number = 3;
   searchQuery: string = '';
   showSearchBar: boolean = false;
   filteredProgrammes: Programme[] = [];
-  subcounty: string = '';  // This will store the subcounty value
-  subcountyId: number = 0;  // This will store the subcountyId (if available)
+  subcounty: string = '';
+  subcountyId: number | undefined;
   programmes: Programme[] = [];
-  facilities: any[] = []; // Array to store all facilities for the subcounty
+  facilities: any[] = [];
 
   months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   years: number[] = [2020, 2021, 2022, 2023, 2024];
@@ -42,39 +45,64 @@ export class SubhomePage implements OnInit {
     private notificationService: NotificationService
   ) { }
 
-  loadUserDetails() {
-    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    if (user && user.subCounty) {
-      this.subcounty = user.subCounty;
-      this.subcountyId = user.subCountyId;  // Ensure to set the subCountyId from the user data
-    } else {
-      console.warn('User or subcounty information not found.');
-    }
-  }
-
   ngOnInit() {
     this.loadUserDetails();
+
     this.loadNotifications();
+    this.initializeDefaults();
     this.loadProgrammes();
   }
 
-  loadNotifications(): void {
-    this.notificationService.getNotifications().subscribe((notifications: Notification[]) => {
-      this.newNotificationsCount = notifications.filter(notification => notification.isNew).length;
-    });
-  }
-
-  toggleSearchBar() {
-    this.showSearchBar = !this.showSearchBar;
-    if (!this.showSearchBar) {
-      this.searchQuery = '';
-      this.filteredProgrammes = this.programmes;
+  loadUserDetails() {
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (user && user.subCounty) {
+      const subCountyName = user.subCounty.trim();
+      console.log('SubCounty Name from user:', subCountyName);
+      
+      this.inventoryService.getSubcounties().subscribe(
+        () => {
+          this.subcountyId = this.inventoryService.getSubCountyIdByName(subCountyName);
+          console.log('Mapped SubCounty ID:', this.subcountyId);
+  
+          if (this.subcountyId) {
+            this.subcounty = subCountyName;
+            console.log('Proceeding with loadProgrammes...');
+            this.loadProgrammes();
+          } else {
+            console.warn('SubCounty ID not found for subCountyName:', subCountyName);
+          }
+        },
+        error => {
+          console.error('Error fetching subcounties:', error);
+        }
+      );
+    } else {
+      console.warn('User or subCounty information not found.');
     }
   }
+  
+  onDateChange(): void {
+    if (!this.selectedMonth || !this.selectedYear) {
+      console.error("Both month and year must be selected to fetch data.");
+      return;
+    }
 
-  filterProgrammes() {
-    this.filteredProgrammes = this.programmes.filter(programme =>
-      programme.programmeName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    this.loadProgrammes();
+  }
+
+  initializeDefaults() {
+    const currentDate = new Date();
+    const previousMonthIndex = currentDate.getMonth() - 1;
+    this.selectedMonth = this.months[previousMonthIndex < 0 ? 11 : previousMonthIndex];
+    this.selectedYear = previousMonthIndex < 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
+  }
+
+  loadNotifications(): void {
+    this.notificationService.getNotifications().subscribe(
+      (notifications: Notification[]) => {
+        this.newNotificationsCount = notifications.filter(notification => notification.isNew).length;
+      },
+      error => console.error('Error fetching notifications:', error)
     );
   }
 
@@ -82,14 +110,26 @@ export class SubhomePage implements OnInit {
     this.menuController.toggle('menu');
   }
 
+  toggleSearchBar() {
+    this.showSearchBar = !this.showSearchBar;
+    if (!this.showSearchBar) {
+      this.searchQuery = '';
+      this.filteredProgrammes = [...this.programmes];
+    }
+  }
+
+  filterProgrammes(): void {
+    this.loadProgrammes();
+  }
+
   goToNotifications(): void {
     this.router.navigate(['/notification']);
   }
 
   getStatusColor(reportingRate: number): string {
-    if (reportingRate >= 0.8) {
+    if (reportingRate >= 50) {
       return 'success';
-    } else if (reportingRate > 0 && reportingRate < 0.8) {
+    } else if (reportingRate > 0 && reportingRate < 20) {
       return 'warning';
     } else {
       return 'danger';
@@ -97,65 +137,61 @@ export class SubhomePage implements OnInit {
   }
 
   loadProgrammes(): void {
+    const selectedMonthIndex = this.months.indexOf(this.selectedMonth) + 1;
+  
+    if (selectedMonthIndex === 0) {
+      console.error("Invalid month selected");
+      return;
+    }
+  
     this.inventoryService.getProgrammes().subscribe(
-      (data: Programme[]) => {
-        this.programmes = data.map((program: any) => ({
-          programmeName: program.programmeName,
+      (programmes: Programme[]) => {
+        this.programmes = programmes.map(programme => ({
+          programmeName: programme.programmeName,
           reportingRate: 0,
-          programmeId: program.programmeId,
+          programmeId: programme.programmeId,
         }));
-        this.filteredProgrammes = this.programmes;
+        this.filteredProgrammes = [...this.programmes];
+  
+        this.inventoryService.getFacilitiesBySubCounty(this.subcountyId!).subscribe(
+          (response: any) => {
+            const loadedFacilities = response.facilities || [];
+            console.log(`Total facilities in subcounty ${this.subcountyId}: ${loadedFacilities.length}`);
+  
+            const programmeRequests = this.programmes.map(programme =>
+              this.inventoryService.fetchReportingRate(
+                this.subcountyId!,
+                programme.programmeId,
+                this.selectedYear,
+                selectedMonthIndex
+              ).pipe(
+                map((reportingRate: number) => ({
+                  ...programme,
+                  reportingRate,
+                }))
+              )
+            );
+  
+            forkJoin(programmeRequests).subscribe(
+              updatedProgrammes => {
+                this.filteredProgrammes = updatedProgrammes;
+              },
+              error => console.error('Error fetching reporting rates:', error)
+            );
+          },
+          error => console.error('Error fetching facilities for subcounty:', error)
+        );
       },
-      (error) => {
-        console.error('Error fetching programmes:', error);
-      }
+      error => console.error('Error fetching programmes:', error)
     );
   }
-
+  
   navigateToInventoryForm(programme: any) {
-    console.log(`Navigating to inventory page with programmeId: ${programme.programmeId}, programmeName: ${programme.programmeName}`);
     this.router.navigate(['/programmes'], {
       queryParams: {
         programmeId: programme.programmeId,
-        programmeName: programme.programmeName
-      }
+        programmeName: programme.programmeName,
+      },
     });
-  }
-
-  loadFacilities(programmeId: number, year: number, month: number) {
-    if (this.subcountyId !== undefined) {
-      this.inventoryService.getFacilitiesBySubCounty(this.subcountyId).subscribe(
-        (response: any) => {
-          if (response && response.facilities && Array.isArray(response.facilities)) {
-            this.facilities = response.facilities;
-
-            this.inventoryService.getFacilitiesByProgramAndPeriod(programmeId, year, month).subscribe(
-              (reportingFacilities: any[]) => {
-                const reportedFacilities = this.facilities.filter((facility: any) =>
-                  reportingFacilities.some((reportedFacility: any) => reportedFacility.facilityId === facility.facilityId)
-                );
-
-                console.log('Facilities that have reported:', reportedFacilities);
-
-                const reportingRate = (reportedFacilities.length / this.facilities.length) * 100;
-
-                const programme = this.programmes.find(p => p.programmeId === programmeId);
-                if (programme) {
-                  programme.reportingRate = reportingRate;
-                }
-
-                console.log(`Reporting Rate for programme ${programmeId}: ${reportingRate}%`);
-              },
-              error => {
-                console.error('Error fetching reporting facilities for the program and period:', error);
-              }
-            );
-          }
-        },
-        error => {
-          console.error('Error fetching facilities for subcounty:', error);
-        }
-      );
-    }
   }
 }
